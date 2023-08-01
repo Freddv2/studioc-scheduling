@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime
-from typing import List, Dict
+from itertools import groupby
 
 import pandas as pd
 
@@ -31,32 +31,40 @@ def create_schedule(teachers):
     schedule = {}
     for _,teacher in teachers.iterrows():
         schedule[teacher['teacher_name']] = {}
-        for day in teacher['day']:
-            time = datetime.strptime(teacher['start_time'], '%H:%M').time()
-            end_time = datetime.strptime(teacher['end_time'], '%H:%M').time()
-            while time < end_time:
-                schedule[teacher['teacher_name']][(day, time)] = None
-                time = time_plus(time, timedelta(minutes=15))
+        time = datetime.strptime(teacher['start_time'], '%H:%M').time()
+        end_time = datetime.strptime(teacher['end_time'], '%H:%M').time()
+        while time < end_time:
+            schedule[teacher['teacher_name']][(teacher['day'], time)] = None
+            time = time_plus(time, timedelta(minutes=15))
     return schedule
 
-def format_final_teacher_schedule(teacher_schedules):
-    # Combine consecutive slots
-    for teacher in teacher_schedules:
-        current_schedule = teacher_schedules[teacher]
-        new_schedule = {}
-        keys = sorted(current_schedule.keys(), key=lambda x: str(x[1]))
-        i = 0
-        while i < len(keys):
-            start_time = keys[i]
-            end_time = start_time
-            student_name = current_schedule[start_time]
-            while i + 1 < len(keys) and keys[i+1][0] == start_time[0] and current_schedule[keys[i+1]] == student_name and time_plus(end_time[1], timedelta(minutes=15)).strftime('%H:%M') == keys[i+1][1]:
-                end_time = keys[i+1]
-                i += 1
-            new_key = (start_time[0], f"{start_time[1]}-{time_plus(end_time[1], timedelta(minutes=15)).strftime('%H:%M')}")
-            new_schedule[new_key] = student_name
-            i += 1
-        teacher_schedules[teacher] = new_schedule
+def format_schedule(schedule):
+    # Output dictionary
+    new_schedule = {}
+
+    # Iterate over each person in the original schedule
+    for person, timeslots in schedule.items():
+        # Sort the timeslots to ensure they are in the correct order
+        sorted_timeslots = sorted(timeslots.items())
+
+        # Group by the day and the person
+        for key, group in groupby(sorted_timeslots, lambda x: (x[0][0], x[1])):
+            time_range = list(group)
+
+            # If there are multiple timeslots in the group, combine them
+            if len(time_range) > 1:
+                start_time = time_range[0][0][1]
+                end_time = (datetime.combine(datetime.today(), time_range[-1][0][1]) + timedelta(minutes=15)).time()
+                new_key = (key[0], f"{start_time.strftime('%H:%M')}-{end_time.strftime('%H:%M')}")
+            else:  # If there is only one timeslot, leave it as is
+                new_key = (key[0], f"{time_range[0][0][1].strftime('%H:%M')}-{(datetime.combine(datetime.today(), time_range[0][0][1]) + timedelta(minutes=15)).time().strftime('%H:%M')}")
+
+            # Add the timeslot(s) to the new schedule
+            if person not in new_schedule:
+                new_schedule[person] = {}
+            new_schedule[person][new_key] = key[1]
+
+    return new_schedule
 
 
 def assign_students(students, teachers):
@@ -69,7 +77,7 @@ def assign_students(students, teachers):
         for _, teacher in teachers.iterrows():
             current_schedule = teacher_schedules[teacher['teacher_name']]
             for timeslot in sorted(current_schedule.keys(), key=lambda x: str(x[1])):
-                quarter_hour_increments = [time_plus(timeslot[1], timedelta(minutes=15 * i)).strftime('%H:%M') for i in range(student['lesson_duration'] // 15)]
+                quarter_hour_increments = [time_plus(timeslot[1], timedelta(minutes=15 * i)) for i in range(student['lesson_duration'] // 15)]
                 is_slot_available = all(current_schedule.get((teacher['day'], time), None) is None for time in quarter_hour_increments)
                 if is_slot_available:
                     # Assign the student to the teacher at the specified timeslot
@@ -80,9 +88,12 @@ def assign_students(students, teachers):
                 continue
             break
         else:
-            unassigned_students.append(student)
-    format_final_teacher_schedule(teacher_schedules)
-    return teacher_schedules,unassigned_students
+            unassigned_students.append(student['student_name'])
+    print(teacher_schedules)
+    print(unassigned_students)
+    formatted_schedule = format_schedule(teacher_schedules)
+    print(formatted_schedule)
+    return teacher_schedules, unassigned_students
 
 
 # Press the green button in the gutter to run the script.
@@ -92,5 +103,3 @@ if __name__ == '__main__':
     # Read teacher data
     teachers = pd.read_csv('teachers.csv')
     teacher_schedules, unassigned_students = assign_students(students, teachers)
-    print(teacher_schedules)
-    print(unassigned_students)
