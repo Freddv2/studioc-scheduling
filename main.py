@@ -2,9 +2,13 @@ import bisect
 import argparse
 import math
 from datetime import timedelta, datetime
+
+from matplotlib import pyplot as plt
+
 from formatter import format_schedule
 
 import pandas as pd
+import seaborn as sns
 
 best_schedule = {}
 best_schedule_unassigned_students = {}
@@ -12,7 +16,7 @@ best_schedule_match_percent = 0
 
 
 def assign_students(students, teachers):
-    teacher_schedules = create_schedule(teachers)
+    teachers_schedule = create_schedule(teachers)
     students.sort_values(by='current_student', ascending=False)
     unassigned_students = []
 
@@ -27,7 +31,7 @@ def assign_students(students, teachers):
                 continue
             if student['location'] != teacher['location']:
                 continue
-            current_schedule = teacher_schedules[teacher['teacher_name']]
+            current_schedule = teachers_schedule[teacher['teacher_name']]
 
             # The order of time slots to try to assign
             student_schedule = {student['ideal_day']: create_time_slots(student['ideal_start_time'], student['ideal_end_time'])}
@@ -42,18 +46,18 @@ def assign_students(students, teachers):
         else:
             unassigned_students.append(student['student_name'])
 
-    percent_matched = (len(unassigned_students) / len(students)) * 100
-    formatted_schedule = format_schedule(teacher_schedules)
+    percent_matched = round((len(unassigned_students) / len(students)) * 100, 1)
+    update_best_iteration(percent_matched, teachers_schedule, unassigned_students)
 
 
+def update_best_iteration(percent_matched, teacher_schedule, unassigned_students):
     global best_schedule_match_percent
     if percent_matched > best_schedule_match_percent:
         best_schedule_match_percent = percent_matched
         global best_schedule
-        best_schedule = formatted_schedule
+        best_schedule = teacher_schedule
         global best_schedule_unassigned_students
         best_schedule_unassigned_students = unassigned_students
-        print(f'{percent_matched}% students matched')
 
 
 def time_plus(time, minutes):
@@ -136,22 +140,49 @@ def add_to_schedule(schedule, day, start_time, end_time):
                 bisect.insort(schedule[day], time_slot)
 
 
+def print_schedule(schedule):
+    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+    timeslots = sorted(set(time for day, time in schedule.keys()), key=lambda x: [int(part) for part in x.split(':')])
+
+    column_width = max(len(day) for day in days)
+    column_width = max(column_width, max(len(str(schedule.get((day, time), ''))) for time in timeslots for day in days))
+
+    # Print header
+    print("Time   | " + " | ".join(day.ljust(column_width) for day in days))
+    print("-" * (9 + 4 * len(days) + column_width * len(days)))
+
+    # Print schedule
+    for time in timeslots:
+        row = [str(schedule.get((day, time), "")).ljust(column_width) for day in days]
+        print(f"{time} | " + " | ".join(row))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Studio C scheduling tool')
-    parser.add_argument('-s', '--students', required=True, help='Path to the students CSV file')
-    parser.add_argument('-t', '--teachers', required=True, help='Path to the teachers CSV file')
+    parser.add_argument('-s', '--students_file', required=True, help='Path to the students CSV file')
+    parser.add_argument('-t', '--teachers_file', required=True, help='Path to the teachers CSV file')
     parser.add_argument('-d', '--duration', type=int, required=True, help='Max scheduling duration in seconds')
 
     args = parser.parse_args()
 
-    students = pd.read_csv(args.students)
-    teachers = pd.read_csv(args.teachers)
-
+    students = pd.read_csv(args.students_file)
+    teachers = pd.read_csv(args.teachers_file)
+    duration = args.duration
     start_time = datetime.now()
+    iteration = 0
     while best_schedule_match_percent < 100:
         shuffled_students = students.sample(frac=1).reset_index(drop=True)
         assign_students(shuffled_students, teachers)
-        if (datetime.now() - start_time).seconds >= args.duration:
-            print(f'Student matched at {best_schedule_match_percent}%. Schedule: {best_schedule}')
+        iteration += 1
+        print(f' {iteration} iteration run. Current best match % is {best_schedule_match_percent}')
+        if (datetime.now() - start_time).seconds >= duration:
+            formatted_teacher_schedules = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
+            print(f'Student matched at {best_schedule_match_percent}%. Schedule: {formatted_teacher_schedules}')
             print(f'Unassigned students: {best_schedule_unassigned_students}')
             break
+
+    for teacher, schedule in formatted_teacher_schedules.items():
+        print(f"\n{teacher}'s Schedule:")
+        print_schedule(schedule)
+
+    print_schedule(formatted_teacher_schedules)
