@@ -1,101 +1,101 @@
-student_name,session,current_student,instrument,lesson_duration,preferred_teacher,preferred_location,alternate_location,preferred_time,preferred_day,alternate_days,alternate_time,alternate_max_start_time
-Kirsten Turner,True,"Non, je suis un nouvel élève.",Piano,30,Vincent Collerette,Rosemère,False,14:30,Jeudi,"['Samedi', 'Mardi', 'Jeudi', 'Dimanche', 'Mercredi', 'Lundi']",16:30,19:00
-Heidi Douglas,True,"Non, je suis un nouvel élève.",Guitare,45,Vinie Mura,Lorraine,False,09:00,Vendredi,"['Dimanche', 'Vendredi']",12:30,19:00
-Briana Hughes,True,"Oui, je suis un élève actuel.",Violon,60,Linda Grenon,Lorraine,True,14:00,Mardi,"['Dimanche', 'Vendredi', 'Lundi', 'Jeudi', 'Samedi']",13:00,15:30
-Julie Coleman,True,"Oui, je suis un élève actuel.",Ukulélé,60,Vinie Mura,Lorraine,True,20:00,Samedi,"['Vendredi', 'Samedi', 'Lundi', 'Dimanche', 'Jeudi', 'Mercredi', 'Mardi']",17:00,13:30
-Elijah Bryant,False,"Oui, je suis un élève actuel.",Chant,30,Vinie Mura,Lorraine,True,09:30,Mardi,"['Dimanche', 'Jeudi', 'Samedi']",09:00,13:00
-Cynthia Johnston,False,"Non, je suis un ancien élève.",Chant,30,Loriane Costantino,Rosemère,False,17:00,Vendredi,['Mardi'],19:00,17:30
-Elizabeth Quinn,False,"Oui, je suis un élève actuel.",Piano,45,Vinie Mura,Lorraine,False,08:30,Jeudi,"['Samedi', 'Vendredi']",09:00,20:00
-Katherine Andrade,True,"Non, je suis un ancien élève.",Piano,45,Vinie Mura,Rosemère,True,08:30,Vendredi,"['Mercredi', 'Dimanche', 'Samedi', 'Jeudi']",10:30,09:30
-Crystal Williams,True,"Non, je suis un nouvel élève.",Violon,30,Vincent Collerette,Rosemère,True,09:00,Samedi,"['Mardi', 'Mercredi', 'Vendredi']",14:30,12:30
-Diane Moore,True,"Non, je suis un ancien élève.",Guitare,30,Linda Grenon,Lorraine,True,14:00,Samedi,['Jeudi'],14:00,20:00
-Nicole Bryant,False,"Non, je suis un ancien élève.",Piano,30,Vincent Collerette,Lorraine,True,11:00,Vendredi,"['Dimanche', 'Vendredi', 'Mardi', 'Jeudi', 'Lundi', 'Mercredi', 'Samedi']",13:30,18:30
-Robert Olsen,True,"Oui, je suis un élève actuel.",Piano,45,Linda Grenon,Lorraine,False,15:30,Dimanche,"['Lundi', 'Mardi', 'Mercredi', 'Dimanche', 'Vendredi', 'Jeudi', 'Samedi']",14:30,20:00
-Carol Stafford,True,"Non, je suis un ancien élève.",Violon,45,Vinie Mura,Lorraine,True,18:00,Mercredi,['Samedi'],14:30,12:00
-Bridget Brown,False,"Oui, je suis un élève actuel.",Ukulélé,45,Vinie Mura,Lorraine,False,08:00,Jeudi,"['Samedi', 'Dimanche', 'Lundi', 'Jeudi', 'Vendredi']",17:00,11:30
-Amy Morgan,False,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Rosemère,False,08:00,Samedi,"['Mardi', 'Mercredi']",13:00,14:00
-Wayne Brooks,False,"Non, je suis un ancien élève.",Violon,60,Linda Grenon,Rosemère,True,09:30,Mardi,"['Jeudi', 'Mercredi', 'Vendredi', 'Lundi']",15:30,11:00
-Steven Martinez,True,"Non, je suis un nouvel élève.",Piano,60,Vinie Mura,Rosemère,False,09:00,Mercredi,"['Samedi', 'Dimanche', 'Vendredi', 'Mardi']",09:00,16:00
-Matthew Johnson,True,"Oui, je suis un élève actuel.",Guitare,30,Vincent Collerette,Lorraine,True,17:30,Jeudi,"['Vendredi', 'Mercredi', 'Jeudi']",18:30,15:30
-Mark White,False,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Rosemère,True,19:00,Samedi,"['Dimanche', 'Samedi', 'Vendredi', 'Mardi', 'Jeudi', 'Mercredi', 'Lundi']",19:30,16:30
-Samantha Cummings,False,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Lorraine,False,15:00,Samedi,"['Mercredi', 'Mardi', 'Vendredi']",14:30,10:30
-Kimberly King,True,"Non, je suis un nouvel élève.",Ukulélé,30,Vinie Mura,Lorraine,True,16:00,Jeudi,"['Lundi', 'Mardi', 'Samedi', 'Vendredi']",09:30,12:00
-Brian Martin,True,"Non, je suis un ancien élève.",Piano,45,Vinie Mura,Lorraine,False,14:30,Lundi,"['Lundi', 'Vendredi', 'Samedi', 'Dimanche', 'Jeudi', 'Mardi']",08:30,12:00
-Duane Montgomery,False,"Oui, je suis un élève actuel.",Ukulélé,45,Vincent Collerette,Lorraine,True,19:30,Lundi,"['Mardi', 'Dimanche', 'Jeudi', 'Mercredi', 'Lundi', 'Samedi']",16:30,10:00
-Michelle Kemp,False,"Non, je suis un ancien élève.",Ukulélé,45,Loriane Costantino,Lorraine,False,14:30,Dimanche,"['Dimanche', 'Lundi', 'Samedi', 'Mardi', 'Jeudi']",17:00,16:00
-Dr. Joseph Harris,False,"Non, je suis un ancien élève.",Piano,30,Linda Grenon,Rosemère,True,16:00,Samedi,['Mardi'],11:00,11:30
-Mason Berg,True,"Oui, je suis un élève actuel.",Violon,30,Vinie Mura,Rosemère,False,09:30,Vendredi,"['Vendredi', 'Jeudi', 'Samedi', 'Mercredi']",14:30,13:00
-Phyllis Silva,True,"Non, je suis un nouvel élève.",Violon,30,Vincent Collerette,Rosemère,False,12:00,Jeudi,"['Dimanche', 'Jeudi', 'Vendredi', 'Lundi', 'Mercredi']",18:30,19:30
-Kimberly Bright,True,"Non, je suis un ancien élève.",Piano,45,Linda Grenon,Lorraine,True,16:30,Dimanche,['Lundi'],10:00,20:00
-Ryan Montoya,True,"Non, je suis un nouvel élève.",Piano,30,Vincent Collerette,Lorraine,False,12:00,Samedi,"['Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche', 'Mardi']",13:00,11:30
-Pam Erickson,False,"Oui, je suis un élève actuel.",Violon,30,Linda Grenon,Lorraine,False,17:30,Lundi,"['Lundi', 'Mercredi', 'Mardi', 'Dimanche', 'Samedi', 'Jeudi']",19:30,14:30
-John Ayala,False,"Non, je suis un nouvel élève.",Violon,60,Linda Grenon,Lorraine,True,09:30,Vendredi,['Dimanche'],12:30,14:30
-Arthur Maynard,False,"Oui, je suis un élève actuel.",Piano,30,Vinie Mura,Rosemère,True,16:00,Samedi,"['Dimanche', 'Vendredi', 'Mercredi', 'Lundi', 'Jeudi']",09:00,11:30
-Christie Wright,True,"Non, je suis un nouvel élève.",Guitare,45,Vincent Collerette,Lorraine,False,10:30,Samedi,"['Vendredi', 'Dimanche', 'Lundi', 'Mercredi']",17:30,12:00
-Paul Mooney,False,"Oui, je suis un élève actuel.",Chant,60,Vincent Collerette,Rosemère,False,10:30,Lundi,"['Mercredi', 'Lundi', 'Vendredi', 'Samedi', 'Mardi']",13:30,10:30
-John Henry,False,"Non, je suis un nouvel élève.",Chant,45,Vincent Collerette,Rosemère,False,14:30,Mardi,"['Dimanche', 'Samedi', 'Jeudi', 'Vendredi', 'Mardi']",20:00,10:30
-Natalie Bishop,True,"Oui, je suis un élève actuel.",Ukulélé,30,Loriane Costantino,Lorraine,False,18:30,Jeudi,"['Mardi', 'Dimanche', 'Samedi']",13:00,12:00
-Kaitlin Wiggins,True,"Oui, je suis un élève actuel.",Guitare,60,Vincent Collerette,Lorraine,False,11:00,Samedi,"['Samedi', 'Mardi', 'Dimanche', 'Lundi', 'Vendredi', 'Jeudi', 'Mercredi']",11:30,19:30
-Darren Patel,True,"Oui, je suis un élève actuel.",Chant,60,Linda Grenon,Rosemère,False,11:00,Samedi,['Mercredi'],14:30,10:30
-Sean Howard,True,"Non, je suis un ancien élève.",Piano,30,,Rosemère,False,14:00,Dimanche,"['Lundi', 'Mardi', 'Dimanche', 'Jeudi']",12:30,18:00
-Larry Brown,False,"Non, je suis un nouvel élève.",Guitare,30,Vincent Collerette,Rosemère,True,20:00,Mardi,"['Samedi', 'Lundi', 'Jeudi', 'Vendredi', 'Dimanche']",19:30,09:00
-Jerry Patel,True,"Non, je suis un ancien élève.",Ukulélé,30,Linda Grenon,Lorraine,True,08:00,Dimanche,"['Mercredi', 'Jeudi', 'Lundi', 'Vendredi']",19:00,17:30
-Heather Gomez,True,"Non, je suis un ancien élève.",Guitare,30,Linda Grenon,Rosemère,True,10:00,Mardi,"['Dimanche', 'Samedi']",17:00,08:30
-Patrick Medina,False,"Non, je suis un ancien élève.",Chant,45,Vinie Mura,Lorraine,True,16:00,Lundi,['Jeudi'],08:00,12:00
-Patricia Copeland,True,"Non, je suis un ancien élève.",Guitare,30,Linda Grenon,Rosemère,True,17:30,Jeudi,"['Jeudi', 'Mardi', 'Lundi', 'Samedi', 'Mercredi']",13:30,15:30
-Rebecca Chambers,True,"Oui, je suis un élève actuel.",Ukulélé,30,Vinie Mura,Lorraine,False,15:30,Mercredi,"['Mercredi', 'Lundi', 'Vendredi', 'Mardi', 'Dimanche']",17:30,16:30
-Rebecca Anderson,True,"Non, je suis un nouvel élève.",Guitare,60,Vinie Mura,Lorraine,True,18:30,Jeudi,"['Vendredi', 'Mercredi', 'Samedi', 'Jeudi']",15:00,12:30
-Lindsay Jones,False,"Oui, je suis un élève actuel.",Violon,60,Vincent Collerette,Lorraine,True,15:30,Mardi,"['Lundi', 'Vendredi']",18:30,15:00
-Joanna Blake,True,"Oui, je suis un élève actuel.",Guitare,30,Vinie Mura,Lorraine,True,15:00,Dimanche,"['Vendredi', 'Mercredi', 'Jeudi', 'Dimanche']",09:00,14:30
-Anthony Daugherty,True,"Non, je suis un nouvel élève.",Violon,30,Vinie Mura,Rosemère,True,08:00,Jeudi,"['Mercredi', 'Vendredi', 'Samedi', 'Jeudi', 'Lundi', 'Dimanche', 'Mardi']",08:30,11:30
-April Rios,True,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Rosemère,True,09:30,Vendredi,"['Lundi', 'Jeudi', 'Samedi', 'Mardi', 'Vendredi']",17:30,13:30
-Heather Sanchez,True,"Oui, je suis un élève actuel.",Violon,30,Vincent Collerette,Lorraine,True,11:00,Vendredi,"['Samedi', 'Jeudi']",16:30,17:30
-Curtis Lawrence,False,"Oui, je suis un élève actuel.",Ukulélé,30,Linda Grenon,Rosemère,False,12:00,Mercredi,"['Jeudi', 'Lundi', 'Mercredi', 'Samedi', 'Dimanche', 'Mardi', 'Vendredi']",17:30,17:00
-Edwin Suarez,True,"Oui, je suis un élève actuel.",Violon,45,Linda Grenon,Lorraine,True,17:30,Samedi,"['Jeudi', 'Mercredi', 'Lundi', 'Mardi', 'Samedi']",08:30,15:30
-Jenna Cook,False,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Lorraine,True,19:30,Mardi,"['Mardi', 'Vendredi']",15:30,08:00
-Mark Rogers,False,"Oui, je suis un élève actuel.",Guitare,60,Vinie Mura,Rosemère,False,14:00,Samedi,['Mardi'],18:30,20:00
-Tanner Ortiz,True,"Non, je suis un ancien élève.",Guitare,30,Vincent Collerette,Rosemère,True,11:00,Mardi,"['Samedi', 'Jeudi', 'Lundi', 'Mardi', 'Mercredi']",15:00,12:30
-Justin Lee,True,"Non, je suis un ancien élève.",Piano,45,Loriane Costantino,Lorraine,True,18:00,Samedi,"['Mercredi', 'Samedi', 'Mardi']",20:00,19:30
-Ebony Cooley MD,False,"Oui, je suis un élève actuel.",Chant,45,Linda Grenon,Lorraine,True,12:00,Mercredi,"['Samedi', 'Mardi', 'Lundi', 'Vendredi', 'Mercredi']",20:00,13:30
-Melissa Griffin,False,"Non, je suis un ancien élève.",Guitare,45,Linda Grenon,Lorraine,True,08:30,Vendredi,"['Jeudi', 'Samedi', 'Mercredi', 'Mardi', 'Dimanche', 'Lundi']",10:00,15:00
-David Murphy,True,"Non, je suis un nouvel élève.",Ukulélé,45,Loriane Costantino,Lorraine,True,14:30,Mardi,"['Samedi', 'Mercredi']",10:00,18:30
-Kristin Mccann,False,"Oui, je suis un élève actuel.",Chant,60,,Lorraine,True,13:00,Vendredi,"['Samedi', 'Vendredi', 'Jeudi']",11:30,09:30
-Jessica Romero,False,"Non, je suis un ancien élève.",Piano,30,Linda Grenon,Lorraine,True,15:00,Mardi,"['Mardi', 'Samedi', 'Lundi']",16:00,14:00
-Joanna Park,False,"Non, je suis un ancien élève.",Piano,60,Linda Grenon,Rosemère,True,08:30,Dimanche,"['Mardi', 'Lundi', 'Dimanche', 'Vendredi', 'Samedi']",08:00,18:00
-Luis Williams,True,"Non, je suis un ancien élève.",Ukulélé,60,Vinie Mura,Lorraine,True,19:30,Jeudi,"['Samedi', 'Mardi', 'Vendredi', 'Mercredi', 'Lundi', 'Dimanche', 'Jeudi']",09:00,16:00
-Sarah Rodriguez,True,"Non, je suis un ancien élève.",Ukulélé,60,Vinie Mura,Rosemère,True,15:30,Vendredi,"['Mercredi', 'Vendredi', 'Samedi', 'Mardi', 'Dimanche', 'Jeudi', 'Lundi']",15:30,10:30
-Christopher Riley,True,"Non, je suis un nouvel élève.",Ukulélé,45,Vincent Collerette,Lorraine,True,09:30,Samedi,"['Lundi', 'Mercredi', 'Jeudi', 'Vendredi', 'Mardi', 'Samedi']",17:30,08:30
-Christine Haynes,True,"Non, je suis un nouvel élève.",Guitare,30,Linda Grenon,Rosemère,True,13:00,Lundi,"['Mercredi', 'Jeudi', 'Samedi', 'Dimanche', 'Lundi', 'Mardi', 'Vendredi']",12:30,18:00
-Rachel Rogers,False,"Oui, je suis un élève actuel.",Violon,30,Vincent Collerette,Rosemère,True,16:30,Dimanche,"['Lundi', 'Dimanche', 'Samedi', 'Jeudi', 'Vendredi', 'Mardi']",13:00,20:00
-Carl Anthony,True,"Non, je suis un nouvel élève.",Ukulélé,60,Linda Grenon,Lorraine,False,11:00,Samedi,"['Mardi', 'Vendredi', 'Jeudi', 'Lundi', 'Dimanche', 'Mercredi']",17:30,19:30
-Clayton Martinez,True,"Oui, je suis un élève actuel.",Chant,45,Linda Grenon,Rosemère,True,14:00,Samedi,"['Mardi', 'Jeudi', 'Samedi', 'Dimanche', 'Vendredi', 'Mercredi']",19:30,17:00
-Gloria Mayo,True,"Non, je suis un nouvel élève.",Piano,30,,Lorraine,False,17:00,Samedi,['Mercredi'],20:00,09:00
-Patricia York,True,"Oui, je suis un élève actuel.",Piano,30,Linda Grenon,Lorraine,True,08:30,Vendredi,"['Lundi', 'Dimanche', 'Samedi']",12:30,08:00
-Heather Burns,False,"Oui, je suis un élève actuel.",Piano,30,Vinie Mura,Rosemère,True,17:00,Samedi,['Mardi'],11:00,11:30
-Angela Wilson,False,"Non, je suis un ancien élève.",Violon,60,Vincent Collerette,Lorraine,True,08:30,Jeudi,"['Samedi', 'Vendredi', 'Jeudi', 'Mercredi', 'Lundi', 'Mardi', 'Dimanche']",13:00,19:30
-Jaclyn Martin,False,"Non, je suis un ancien élève.",Violon,30,Linda Grenon,Lorraine,False,11:00,Mardi,"['Mardi', 'Jeudi', 'Lundi', 'Vendredi', 'Mercredi', 'Dimanche', 'Samedi']",19:00,19:00
-Denise Martin,True,"Oui, je suis un élève actuel.",Chant,30,Vinie Mura,Lorraine,False,11:00,Samedi,['Mercredi'],18:30,09:30
-Tabitha Lozano,False,"Non, je suis un ancien élève.",Guitare,30,Vincent Collerette,Rosemère,False,15:00,Vendredi,"['Samedi', 'Vendredi']",09:00,18:00
-Donald Chang,False,"Non, je suis un ancien élève.",Ukulélé,60,Linda Grenon,Rosemère,True,17:30,Dimanche,['Dimanche'],20:00,19:00
-Alan Kim,False,"Oui, je suis un élève actuel.",Piano,60,Linda Grenon,Lorraine,True,13:30,Mardi,"['Lundi', 'Vendredi']",18:00,08:00
-Michael Adams,True,"Non, je suis un nouvel élève.",Chant,45,Vincent Collerette,Lorraine,True,14:00,Mercredi,['Mercredi'],15:00,15:00
-Jennifer Lee,False,"Oui, je suis un élève actuel.",Chant,30,Vinie Mura,Rosemère,True,14:30,Jeudi,"['Dimanche', 'Jeudi', 'Samedi', 'Mardi', 'Lundi']",16:00,17:30
-Timothy Pratt,False,"Non, je suis un ancien élève.",Chant,30,Linda Grenon,Rosemère,False,08:00,Vendredi,"['Mercredi', 'Lundi']",18:00,15:30
-Sarah Sims,True,"Oui, je suis un élève actuel.",Chant,30,Vincent Collerette,Lorraine,True,16:00,Mardi,"['Lundi', 'Dimanche', 'Samedi', 'Mercredi', 'Jeudi', 'Mardi', 'Vendredi']",13:00,19:00
-Chad Young,True,"Oui, je suis un élève actuel.",Piano,45,Linda Grenon,Lorraine,True,11:30,Dimanche,"['Jeudi', 'Mardi', 'Dimanche', 'Vendredi']",14:00,12:00
-Ashley Jones,False,"Non, je suis un nouvel élève.",Ukulélé,45,Vincent Collerette,Rosemère,True,09:00,Samedi,"['Mardi', 'Samedi', 'Dimanche', 'Mercredi', 'Vendredi']",08:30,15:30
-David Hughes,True,"Non, je suis un ancien élève.",Guitare,60,Linda Grenon,Lorraine,False,17:30,Lundi,"['Lundi', 'Jeudi', 'Mercredi']",09:30,16:30
-John Moore,True,"Non, je suis un nouvel élève.",Chant,45,Linda Grenon,Lorraine,True,10:00,Lundi,['Lundi'],11:00,18:30
-Chris Reed,False,"Non, je suis un ancien élève.",Violon,45,Vincent Collerette,Lorraine,True,08:30,Mercredi,['Dimanche'],15:30,12:00
-Catherine Williams,True,"Oui, je suis un élève actuel.",Violon,30,Vinie Mura,Rosemère,True,13:30,Mercredi,"['Dimanche', 'Samedi']",13:00,12:00
-Michelle Stout,True,"Non, je suis un nouvel élève.",Guitare,45,Vincent Collerette,Rosemère,True,11:30,Dimanche,"['Vendredi', 'Samedi', 'Jeudi', 'Mardi', 'Lundi']",17:00,18:30
-Daniel Gibson,False,"Oui, je suis un élève actuel.",Piano,30,Vincent Collerette,Lorraine,False,16:00,Vendredi,['Lundi'],09:30,10:30
-Kayla Phillips,False,"Non, je suis un nouvel élève.",Chant,30,Linda Grenon,Rosemère,False,08:00,Lundi,"['Dimanche', 'Lundi', 'Mercredi', 'Jeudi', 'Mardi']",20:00,17:30
-Miguel Lewis,True,"Non, je suis un nouvel élève.",Piano,45,Vincent Collerette,Rosemère,True,08:00,Dimanche,"['Mercredi', 'Lundi', 'Dimanche', 'Jeudi', 'Vendredi']",19:00,09:30
-Sarah Ruiz,False,"Non, je suis un ancien élève.",Chant,45,Louis Godbout,Rosemère,False,18:30,Jeudi,"['Dimanche', 'Mercredi', 'Lundi', 'Vendredi', 'Samedi', 'Jeudi']",15:00,11:00
-Sarah Parrish,True,"Oui, je suis un élève actuel.",Violon,30,Vincent Collerette,Rosemère,True,15:30,Lundi,"['Vendredi', 'Jeudi', 'Dimanche', 'Mardi', 'Lundi', 'Mercredi']",08:00,12:00
-Nicole Mccullough,True,"Non, je suis un ancien élève.",Ukulélé,30,Loriane Costantino,Rosemère,True,12:30,Mardi,"['Jeudi', 'Mardi', 'Mercredi', 'Samedi']",15:30,15:30
-Janet Owens,True,"Non, je suis un nouvel élève.",Ukulélé,30,Vinie Mura,Lorraine,False,15:00,Jeudi,"['Samedi', 'Vendredi', 'Lundi']",13:30,13:30
-Debbie Gregory,False,"Oui, je suis un élève actuel.",Ukulélé,45,Louis Godbout,Lorraine,True,15:00,Mardi,"['Mardi', 'Vendredi', 'Mercredi', 'Dimanche', 'Samedi', 'Jeudi']",09:30,15:30
-Tanner Bailey,True,"Oui, je suis un élève actuel.",Ukulélé,30,Linda Grenon,Lorraine,True,18:30,Jeudi,"['Lundi', 'Mardi', 'Samedi', 'Dimanche']",13:00,16:30
-Lacey Little,False,"Non, je suis un ancien élève.",Ukulélé,60,Loriane Costantino,Lorraine,True,19:00,Mardi,"['Dimanche', 'Mardi']",11:00,08:30
+email,phone_number,student_name,want_lesson,current_student,instrument,lesson_duration,preferred_teacher,location,can_be_realocated,ideal_day,ideal_start_time,ideal_end_time,alternative_day_1,alternative_start_time_1,alternative_end_time_1,alternative_day_2,alternative_start_time_2,alternative_end_time_2,alternative_day_3,alternative_start_time_3,alternative_end_time_3,time_slot_priority,simultaneous_family_class
+student3091@example.com,514-6491-1651,Student 2715,True,False,Chant,30,Vinie Mura,Rosemère,False,Lundi,18:06,19:24,Mardi,20:13,21:01,,,12:04,Dimanche,,,heure du cours,True
+student8478@example.com,514-7435-1524,Student 4086,True,False,Guitare,60,Vincent Collerette,Rosemère,True,Samedi,11:28,18:30,Samedi,20:41,21:41,Jeudi,15:21,16:42,Jeudi,,14:32,journée de la semaine,True
+student9655@example.com,514-8671-9544,Student 4949,True,False,Guitare,30,,Lorraine,False,Vendredi,12:45,16:32,Jeudi,09:40,10:47,Jeudi,,,Jeudi,,15:18,journée de la semaine,False
+student2421@example.com,514-4114-4840,Student 4135,False,False,Violon,45,Loriane Costantino,Rosemère,False,Dimanche,17:29,18:19,Mercredi,09:54,15:08,,12:33,14:45,Jeudi,,,journée de la semaine,True
+student1232@example.com,514-3004-9218,Student 4461,False,True,Ukulélé,30,,Rosemère,False,Dimanche,15:13,20:35,Lundi,09:26,17:53,Jeudi,20:09,21:47,Vendredi,,,journée de la semaine,True
+student4638@example.com,514-8362-4358,Student 6428,False,False,Piano,30,,Lorraine,False,Dimanche,18:06,21:05,Vendredi,18:18,20:35,Samedi,11:43,19:31,Samedi,,,heure du cours,False
+student3840@example.com,514-4981-4405,Student 6625,False,True,Chant,60,,Rosemère,False,Mardi,11:43,13:00,Mardi,10:43,18:49,Dimanche,,,Lundi,,,journée de la semaine,False
+student2277@example.com,514-9294-9335,Student 6688,False,True,Violon,30,Loriane Costantino,Lorraine,True,Mercredi,16:51,18:25,Samedi,20:42,21:50,Lundi,13:39,15:10,Mercredi,12:25,21:24,,True
+student7058@example.com,514-2323-9607,Student 1449,False,False,Guitare,45,,Rosemère,False,Mercredi,15:24,16:07,Samedi,18:37,19:35,Samedi,16:24,21:38,Vendredi,18:10,19:07,,False
+student6591@example.com,514-4862-1579,Student 5875,True,False,Violon,45,Loriane Costantino,Rosemère,False,Samedi,15:00,17:36,Lundi,11:56,18:41,Jeudi,,,,,18:47,journée de la semaine,False
+student4465@example.com,514-4353-1308,Student 8111,True,False,Chant,45,,Rosemère,False,Vendredi,09:35,16:52,Dimanche,15:17,21:29,Samedi,19:17,20:52,Vendredi,,,journée de la semaine,False
+student7889@example.com,514-1213-4439,Student 7803,True,False,Piano,60,,Rosemère,False,Mercredi,09:50,18:09,Dimanche,10:03,19:30,Mardi,,10:00,,15:41,19:41,,
+student5993@example.com,514-4968-5089,Student 8507,False,False,Chant,45,,Lorraine,True,Dimanche,15:10,21:29,Mardi,12:03,13:12,,15:49,19:04,Mercredi,13:21,20:40,,True
+student6868@example.com,514-9400-9042,Student 8563,True,True,Chant,30,,Lorraine,True,Mercredi,12:15,18:00,Lundi,09:34,18:45,,,,Dimanche,19:41,21:27,heure du cours,True
+student5453@example.com,514-7015-1549,Student 6168,True,True,Piano,30,,Lorraine,True,Lundi,20:17,21:57,Mercredi,14:15,21:36,Lundi,,14:30,Mardi,10:12,18:05,heure du cours,
+student5738@example.com,514-6191-7339,Student 6559,False,False,Guitare,45,,Lorraine,False,Mardi,12:38,13:39,Jeudi,17:33,20:39,Samedi,,,,,20:54,journée de la semaine,
+student6637@example.com,514-6708-4125,Student 2011,True,True,Piano,30,,Rosemère,False,Dimanche,16:16,21:25,Vendredi,17:11,20:41,,20:13,21:56,,09:37,20:11,,
+student7096@example.com,514-2729-6330,Student 7965,True,True,Violon,60,,Rosemère,True,Samedi,15:37,21:14,Lundi,15:04,18:04,,,,Mardi,,,,False
+student6460@example.com,514-9556-7784,Student 7871,False,True,Ukulélé,30,Vincent Collerette,Lorraine,False,Jeudi,10:41,15:28,Mercredi,20:19,21:24,Dimanche,,,,13:31,20:11,,
+student4771@example.com,514-4154-7518,Student 3871,False,False,Chant,60,Linda Grenon,Lorraine,True,Vendredi,17:04,18:51,Mardi,17:49,19:02,Vendredi,,,Mercredi,,,journée de la semaine,False
+student7440@example.com,514-3063-5002,Student 1769,True,True,Violon,45,,Rosemère,True,Vendredi,09:14,21:19,Dimanche,18:52,21:36,Mardi,,,Mardi,,16:01,,
+student8058@example.com,514-8909-5923,Student 4449,False,True,Ukulélé,30,,Lorraine,True,Mercredi,13:40,15:03,Vendredi,20:59,21:15,,,12:06,Samedi,13:18,21:56,heure du cours,
+student4966@example.com,514-9453-8685,Student 9186,True,False,Guitare,45,Louis Godbout,Rosemère,False,Samedi,12:14,18:01,Vendredi,15:28,21:50,Dimanche,11:50,19:21,Mardi,,,heure du cours,
+student8214@example.com,514-2842-4028,Student 3756,False,True,Chant,60,,Rosemère,True,Mercredi,16:35,18:08,Mardi,09:32,19:04,Jeudi,12:21,18:57,,,,,False
+student6325@example.com,514-3369-3083,Student 5320,True,False,Chant,30,,Rosemère,False,Samedi,10:27,11:40,Mardi,16:30,17:13,Lundi,,07:02,Mardi,,,heure du cours,True
+student6129@example.com,514-1755-5946,Student 7198,True,True,Piano,45,,Lorraine,True,Dimanche,09:10,15:43,Samedi,19:35,20:55,Lundi,,17:51,,15:04,20:48,heure du cours,False
+student4772@example.com,514-2212-4591,Student 2597,False,False,Ukulélé,45,,Rosemère,True,Dimanche,19:37,20:33,Lundi,10:42,19:02,Dimanche,19:02,20:57,,17:15,18:51,journée de la semaine,False
+student7504@example.com,514-9341-5467,Student 6145,True,True,Piano,45,Linda Grenon,Rosemère,False,Vendredi,13:47,17:19,Mercredi,13:37,16:54,,13:31,18:57,Dimanche,13:49,14:40,journée de la semaine,False
+student1227@example.com,514-2918-8159,Student 2292,True,False,Chant,30,Linda Grenon,Rosemère,False,Lundi,16:13,17:05,Vendredi,11:38,12:23,Dimanche,09:20,19:42,Jeudi,,,,False
+student1405@example.com,514-5606-2511,Student 6023,True,True,Guitare,60,Vincent Collerette,Lorraine,True,Samedi,17:45,21:42,Samedi,12:14,16:10,,09:06,13:44,Dimanche,,,,True
+student3167@example.com,514-4983-5983,Student 5849,False,False,Ukulélé,30,Vincent Collerette,Rosemère,False,Mercredi,11:05,16:53,Mardi,11:45,14:15,Mardi,,17:17,Samedi,,08:57,heure du cours,False
+student5792@example.com,514-2549-1999,Student 6493,False,True,Piano,45,,Rosemère,True,Vendredi,10:41,16:52,Mardi,09:07,15:37,Mardi,,,Mardi,,,heure du cours,True
+student2539@example.com,514-7810-3559,Student 9033,True,False,Ukulélé,45,Vincent Collerette,Rosemère,True,Mercredi,10:09,17:22,Vendredi,20:34,21:05,Lundi,19:01,21:17,Jeudi,,07:21,,
+student8060@example.com,514-3064-1933,Student 5937,True,True,Chant,30,Linda Grenon,Lorraine,False,Jeudi,17:11,19:15,Samedi,19:40,21:15,Lundi,10:40,11:50,Mardi,11:43,16:23,,
+student2402@example.com,514-4368-4359,Student 3791,False,True,Chant,30,,Rosemère,True,Dimanche,15:20,16:32,Lundi,11:56,14:29,,15:07,19:59,Samedi,17:01,20:00,journée de la semaine,True
+student8536@example.com,514-5107-8354,Student 3811,False,True,Ukulélé,60,Vincent Collerette,Rosemère,True,Dimanche,14:54,20:54,Vendredi,15:26,17:59,Mercredi,13:47,14:33,Samedi,,07:22,journée de la semaine,True
+student9776@example.com,514-8800-9006,Student 5398,True,True,Ukulélé,60,Vincent Collerette,Rosemère,False,Jeudi,10:37,17:44,Mardi,11:44,18:31,,11:59,21:36,Mercredi,,,heure du cours,True
+student6661@example.com,514-2206-4667,Student 7059,True,False,Chant,30,,Lorraine,False,Lundi,18:02,20:32,Mercredi,09:58,21:13,Mercredi,16:20,19:24,Dimanche,,07:52,,
+student6344@example.com,514-6310-6979,Student 4369,False,False,Chant,45,,Rosemère,True,Lundi,16:29,18:35,Mardi,12:03,20:23,,17:29,19:06,,11:37,13:32,journée de la semaine,True
+student6672@example.com,514-8724-2579,Student 8947,False,True,Piano,60,,Rosemère,True,Jeudi,14:10,15:56,Jeudi,10:22,20:27,Lundi,,18:36,Samedi,16:50,18:08,heure du cours,
+student4060@example.com,514-7488-1034,Student 9546,False,True,Guitare,45,Vincent Collerette,Lorraine,True,Lundi,10:30,16:13,Vendredi,18:53,19:13,Dimanche,20:27,21:42,Samedi,18:43,21:15,,
+student3962@example.com,514-5522-9922,Student 8175,True,False,Chant,60,Linda Grenon,Rosemère,False,Lundi,13:04,20:25,Vendredi,14:10,15:14,Vendredi,14:30,19:28,Dimanche,20:17,21:39,,
+student8609@example.com,514-9617-3695,Student 7417,True,False,Chant,60,,Rosemère,False,Lundi,09:40,12:34,Jeudi,11:29,14:57,Dimanche,,,,15:11,19:54,journée de la semaine,False
+student1723@example.com,514-8152-5699,Student 6110,True,False,Ukulélé,60,,Lorraine,True,Vendredi,13:17,16:29,Mercredi,15:50,16:06,Samedi,13:08,15:06,Samedi,09:58,18:13,journée de la semaine,True
+student7709@example.com,514-7544-4802,Student 9208,True,True,Chant,30,Vinie Mura,Rosemère,False,Mardi,09:13,13:49,Dimanche,09:40,14:09,Mardi,,20:07,Samedi,,,journée de la semaine,False
+student5312@example.com,514-1272-4429,Student 8488,False,False,Chant,30,Linda Grenon,Lorraine,False,Dimanche,09:38,13:58,Vendredi,11:26,12:02,Samedi,,12:57,Samedi,,14:16,,
+student1119@example.com,514-2901-7184,Student 5403,False,True,Chant,60,Vinie Mura,Rosemère,False,Mercredi,09:53,15:42,Dimanche,16:02,21:34,Vendredi,09:49,11:34,Dimanche,,09:30,journée de la semaine,True
+student3577@example.com,514-8881-6648,Student 8943,True,False,Piano,30,Vinie Mura,Rosemère,True,Mercredi,10:02,19:37,Samedi,14:12,18:25,,,10:06,Mardi,16:42,20:55,,True
+student6927@example.com,514-5537-5794,Student 5089,True,True,Piano,45,Vinie Mura,Rosemère,False,Mardi,11:48,17:09,Dimanche,17:33,20:20,Jeudi,18:14,20:57,Dimanche,16:29,17:38,,False
+student2387@example.com,514-7397-8667,Student 8192,False,False,Piano,60,Vinie Mura,Rosemère,False,Samedi,16:37,17:56,Mardi,09:34,15:59,Jeudi,,21:32,Mardi,20:40,21:25,heure du cours,False
+student3638@example.com,514-4060-9108,Student 2342,True,True,Ukulélé,30,Vincent Collerette,Rosemère,True,Vendredi,20:02,21:09,Vendredi,18:53,19:34,Mardi,,13:41,Vendredi,16:33,17:59,heure du cours,True
+student9009@example.com,514-1274-1741,Student 2267,False,False,Guitare,60,Louis Godbout,Lorraine,False,Vendredi,18:51,19:41,Vendredi,14:04,19:06,Mardi,,,Dimanche,20:43,21:25,heure du cours,True
+student3448@example.com,514-7702-5835,Student 8987,False,False,Piano,45,,Rosemère,False,Jeudi,20:54,21:39,Samedi,10:01,12:52,Dimanche,,12:35,Dimanche,,19:20,heure du cours,
+student7739@example.com,514-1114-7485,Student 3009,False,True,Guitare,45,,Rosemère,False,Dimanche,14:36,19:54,Vendredi,12:06,13:43,Lundi,13:45,18:36,Mardi,13:57,14:21,,
+student4758@example.com,514-2628-9905,Student 8319,False,True,Chant,30,,Lorraine,False,Samedi,12:49,20:44,Dimanche,12:39,15:45,Jeudi,,19:02,,,08:03,,
+student3329@example.com,514-9062-3796,Student 6917,True,True,Piano,45,,Lorraine,False,Samedi,18:18,20:55,Samedi,17:45,18:28,Mardi,09:02,10:41,Vendredi,14:12,16:50,journée de la semaine,
+student6781@example.com,514-7471-2997,Student 9392,False,False,Chant,60,Vinie Mura,Rosemère,False,Dimanche,16:17,17:55,Samedi,09:51,10:18,,18:01,21:00,Lundi,,,,True
+student4444@example.com,514-5018-6261,Student 1149,False,False,Guitare,45,,Lorraine,False,Mercredi,18:10,19:18,Mardi,20:38,21:53,Jeudi,10:08,14:17,,,,journée de la semaine,True
+student4669@example.com,514-8123-4911,Student 7350,True,True,Piano,30,,Lorraine,True,Dimanche,10:02,18:12,Mercredi,12:05,16:57,Dimanche,12:43,19:11,Samedi,,,journée de la semaine,True
+student8651@example.com,514-7629-6336,Student 3260,False,False,Ukulélé,30,,Rosemère,False,Vendredi,09:20,15:14,Samedi,10:38,21:29,Mercredi,,,Jeudi,,10:12,,True
+student5648@example.com,514-1133-5248,Student 1825,True,True,Piano,30,,Rosemère,False,Vendredi,17:10,21:58,Lundi,10:31,11:17,Dimanche,,,Samedi,,,heure du cours,True
+student2145@example.com,514-3692-4162,Student 1914,True,True,Violon,45,Loriane Costantino,Lorraine,False,Vendredi,13:22,18:07,Jeudi,14:39,15:40,,,,Dimanche,17:01,19:21,journée de la semaine,True
+student8041@example.com,514-2889-8676,Student 7473,True,True,Piano,60,Linda Grenon,Rosemère,False,Samedi,13:08,15:44,Jeudi,10:03,16:01,Jeudi,16:53,20:12,,18:08,21:48,,
+student5624@example.com,514-3292-1934,Student 7610,True,True,Chant,60,Linda Grenon,Rosemère,False,Mercredi,12:25,13:51,Lundi,12:12,16:26,Jeudi,19:53,21:51,Dimanche,11:25,21:25,heure du cours,
+student2082@example.com,514-6376-1832,Student 8696,True,False,Piano,60,,Rosemère,False,Jeudi,11:45,13:57,Dimanche,16:01,20:31,Mercredi,,20:14,Mercredi,,11:49,,
+student3593@example.com,514-6831-7750,Student 6539,True,False,Violon,45,,Rosemère,False,Lundi,11:52,15:01,Jeudi,16:39,19:36,Mardi,,17:15,,,15:10,,True
+student8080@example.com,514-6270-3070,Student 6913,False,True,Ukulélé,30,,Rosemère,True,Lundi,19:14,20:55,Jeudi,15:24,17:31,Samedi,,,Mercredi,,18:21,heure du cours,
+student2986@example.com,514-4481-3036,Student 5922,True,True,Ukulélé,60,,Lorraine,True,Mercredi,20:15,21:40,Samedi,10:23,15:25,Samedi,,19:17,Vendredi,12:26,17:07,journée de la semaine,True
+student3017@example.com,514-1156-2668,Student 4461,True,False,Piano,30,Vinie Mura,Rosemère,True,Samedi,19:26,21:36,Vendredi,14:23,20:16,Mercredi,12:16,20:34,,14:56,21:19,,True
+student1198@example.com,514-6609-7884,Student 7182,True,False,Chant,45,Vinie Mura,Rosemère,False,Mercredi,18:46,21:18,Mardi,18:58,19:40,Samedi,16:48,21:31,,,16:31,heure du cours,True
+student3542@example.com,514-6494-5709,Student 1181,False,True,Piano,30,,Rosemère,True,Vendredi,12:54,15:15,Mercredi,11:10,21:44,Mercredi,16:47,18:25,Vendredi,12:28,18:48,heure du cours,False
+student1560@example.com,514-7331-6533,Student 2993,False,False,Chant,45,,Lorraine,False,Jeudi,17:40,21:52,Samedi,15:07,21:55,Dimanche,15:32,21:00,Lundi,,17:40,,True
+student8779@example.com,514-1444-4545,Student 7165,True,False,Piano,45,,Lorraine,True,Mercredi,13:22,21:04,Vendredi,15:55,20:10,Lundi,20:40,21:46,Mardi,,17:13,heure du cours,False
+student6322@example.com,514-1315-8711,Student 8860,False,True,Piano,60,Vinie Mura,Lorraine,True,Samedi,17:22,20:02,Vendredi,16:34,18:53,Samedi,,,Lundi,09:38,14:57,,False
+student2115@example.com,514-7164-8037,Student 4536,True,False,Piano,60,,Rosemère,True,Jeudi,09:09,10:25,Jeudi,10:15,14:52,Lundi,12:42,18:33,Dimanche,,,heure du cours,True
+student1304@example.com,514-5372-4173,Student 4267,False,True,Ukulélé,60,,Rosemère,False,Dimanche,15:50,20:05,Lundi,10:38,14:33,Lundi,18:22,21:03,Dimanche,,,,True
+student1506@example.com,514-8707-3111,Student 5110,False,False,Piano,45,Linda Grenon,Lorraine,False,Vendredi,09:38,19:35,Vendredi,11:52,21:47,Mercredi,,14:12,Dimanche,,,heure du cours,
+student3273@example.com,514-7897-3147,Student 5421,True,False,Ukulélé,60,Vincent Collerette,Rosemère,False,Lundi,18:32,21:53,Samedi,14:13,15:43,Samedi,,,,,18:53,,True
+student7546@example.com,514-5820-3470,Student 6900,True,False,Piano,45,Linda Grenon,Lorraine,False,Lundi,11:16,18:17,Vendredi,14:59,16:45,Vendredi,,,Lundi,,09:42,journée de la semaine,False
+student8056@example.com,514-8206-2800,Student 7351,False,True,Piano,30,Vinie Mura,Lorraine,True,Dimanche,17:46,19:11,Vendredi,14:00,19:17,Lundi,,10:29,Mercredi,,,heure du cours,False
+student6782@example.com,514-6350-2434,Student 9129,False,False,Guitare,60,,Rosemère,False,Vendredi,18:23,21:29,Mercredi,19:23,21:56,Dimanche,,13:25,Vendredi,16:56,17:34,heure du cours,
+student1049@example.com,514-5010-3851,Student 4052,False,True,Ukulélé,45,,Rosemère,True,Mercredi,11:39,18:01,Mercredi,15:48,20:25,Mercredi,18:51,20:34,Samedi,18:21,21:29,,
+student7916@example.com,514-7188-4784,Student 5554,True,True,Piano,30,,Rosemère,False,Jeudi,20:51,21:15,Vendredi,10:35,13:32,Mardi,18:06,19:30,Mardi,12:58,21:46,heure du cours,
+student3456@example.com,514-2456-1551,Student 7354,False,True,Piano,45,Vinie Mura,Lorraine,False,Mercredi,17:10,20:29,Samedi,16:24,21:36,Jeudi,,,Vendredi,14:48,20:00,journée de la semaine,True
+student2503@example.com,514-1113-1058,Student 3796,True,True,Piano,45,Linda Grenon,Rosemère,False,Lundi,14:17,15:27,Vendredi,17:19,20:04,Jeudi,,19:06,Dimanche,17:27,19:04,journée de la semaine,
+student1643@example.com,514-7211-4754,Student 5580,False,False,Ukulélé,45,,Lorraine,True,Dimanche,12:54,15:55,Lundi,20:16,21:48,,12:41,14:22,Lundi,,10:46,,
+student8164@example.com,514-3083-6976,Student 1401,False,False,Violon,30,,Rosemère,True,Mardi,20:13,21:37,Vendredi,15:13,20:33,,11:23,13:24,Vendredi,17:32,18:40,,False
+student4199@example.com,514-6450-1197,Student 1767,True,True,Chant,60,,Rosemère,False,Dimanche,15:30,17:08,Vendredi,10:28,11:38,Mercredi,,,Lundi,10:02,13:26,,True
+student9606@example.com,514-7325-7606,Student 4321,False,True,Piano,45,,Lorraine,False,Vendredi,16:38,20:07,Jeudi,12:48,19:23,Mercredi,,11:12,Vendredi,,09:56,heure du cours,True
+student9998@example.com,514-1045-5360,Student 4591,True,False,Guitare,30,Louis Godbout,Rosemère,True,Mardi,11:03,14:24,Dimanche,12:40,19:04,Samedi,,,Mercredi,16:49,20:39,heure du cours,False
+student3656@example.com,514-6278-8986,Student 6912,True,False,Piano,60,Linda Grenon,Rosemère,False,Mardi,12:41,15:14,Lundi,10:28,19:43,Mercredi,,11:54,,,15:49,journée de la semaine,
+student6044@example.com,514-8600-1556,Student 4131,True,True,Violon,30,Loriane Costantino,Rosemère,True,Mardi,13:03,14:45,Vendredi,09:39,11:27,,17:53,18:10,Mardi,13:17,19:48,,
+student3560@example.com,514-3150-7606,Student 8892,False,False,Ukulélé,45,Vincent Collerette,Rosemère,False,Jeudi,14:07,16:51,Jeudi,19:09,20:04,Mardi,16:52,19:05,Mercredi,17:58,18:11,heure du cours,
+student8939@example.com,514-7405-8488,Student 8377,False,True,Guitare,45,Vincent Collerette,Rosemère,True,Jeudi,15:51,21:46,Mardi,16:48,21:10,,16:44,20:14,Dimanche,19:07,20:06,journée de la semaine,True
+student5473@example.com,514-8600-6356,Student 5378,True,False,Piano,30,,Lorraine,True,Dimanche,20:31,21:22,Mardi,15:59,16:21,,18:40,21:34,Mardi,,,journée de la semaine,
+student4142@example.com,514-4005-6761,Student 2449,True,False,Piano,60,,Lorraine,True,Samedi,15:47,16:18,Lundi,10:58,20:39,Dimanche,12:18,18:04,Mardi,,07:16,journée de la semaine,False
+student1967@example.com,514-2463-6408,Student 4674,False,False,Piano,45,Linda Grenon,Lorraine,True,Jeudi,14:36,18:53,Vendredi,09:59,11:32,Mardi,,08:18,Dimanche,,15:24,heure du cours,True
+student4694@example.com,514-4097-3494,Student 3312,True,False,Ukulélé,60,,Lorraine,True,Vendredi,14:23,20:30,Dimanche,12:01,19:09,Mardi,09:21,20:06,,,,,True
+student1843@example.com,514-5317-2613,Student 2767,True,False,Chant,45,,Rosemère,False,Mercredi,19:33,21:41,Jeudi,15:43,19:58,Mercredi,09:13,21:06,Jeudi,,18:22,heure du cours,False
+student6248@example.com,514-3665-6284,Student 4466,True,True,Chant,60,,Rosemère,False,Samedi,17:17,21:22,Dimanche,11:57,15:11,,,21:27,,15:56,19:51,,
