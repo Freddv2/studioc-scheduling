@@ -27,9 +27,10 @@ def main(input_file, output_file):
         "OPTIONNEL #4 - Plage horaire alternative : Quelle journée de la semaine? ": "alternative_day_3",
         "OPTIONNEL #4 - Plage horaire alternative :  À partir de quelle heure êtes-vous disponible pour débuter votre cours? (Exemple : 16h00)": "alternative_start_time_3",
         "OPTIONNEL #4 -  Plage horaire alternative :  Quelle est l'heure la plus tard à laquelle vous pourriez débuter votre cours? (Exemple : 21h00)": "alternative_end_time_3",
-        "Dans l'éventualité où nous n'aurions pas exactement la plage horaire que vous souhaitez, qu'aimeriez-vous que nous priorisions?": "time_slot_priority_1",
-        "Dans l'éventualité où nous n'aurions pas exactement la plage horaire que vous souhaitez, qu'aimeriez-vous que nous priorisions? [Choix 2]": "time_slot_priority_2",
-        "Souhaitez vous prendre un cours en même temps qu'un autre membre de la famille?  Prendre note que vous devrez tout de même remplir l'inscription pour l'autre élève.": "simultaneous_family_class"
+        "Dans l'éventualité où nous n'aurions pas exactement la plage horaire que vous souhaitez, qu'aimeriez-vous que nous priorisions?": "prioritise",
+        "Souhaitez vous prendre un cours en même temps qu'un autre membre de la famille?  Prendre note que vous devrez tout de même remplir l'inscription pour l'autre élève.": "simultaneous_family_class",
+        "Si oui, veuillez écrire le prénom ET nom de famille de l'autre élève. Prendre note que vous devrez remplir l'inscription pour l'autre élève. Nous ne pouvons pas garantir que nous serons en mesure de placer les membres d'une même famille à la même plage horaire.": "sibling_name",
+        "Si vous avez une suggestion ou un commentaire, n'hésitez pas à nous en faire part!": "comment"
     }
 
     # Read the CSV file.
@@ -44,13 +45,24 @@ def main(input_file, output_file):
     # Clean up values.
     df['want_lesson'] = df['want_lesson'].apply(lambda x: True if x == 'Oui' else False)
     df['current_student'] = df['current_student'].apply(lambda x: True if x == 'Oui, je suis un élève actuel.' else False)
-    df['preferred_teacher'] = df['preferred_teacher'].apply(lambda x: '' if x in ['Je ne sais pas / Pas de préférence', 'Je suis un nouvel élève'] else x)
+    df['preferred_teacher'] = df['preferred_teacher'].apply(lambda x: '' if x in ['Je ne sais pas / Pas de préférence', 'Je suis un nouvel élève', None] else str(x).split('.', 1)[0])
     df['location'] = df['location'].apply(lambda x: 'Rosemere' if x == 'École de Rosemère - 399 Chemin de la Grande-Côte, Local A' else ('Lorraine' if x == 'École de Lorraine - 95 Boul. de Gaulle, Suite 205' else ''))
     df['lesson_duration'] = df['lesson_duration'].apply(lambda x: 60 if x == '60 Minutes' else (45 if x == 'École de Lorraine - 95 Boul. de Gaulle, Suite 205' else 30))
-
+    df['can_be_realocated'] = df['can_be_realocated'].apply(lambda x: False if x == 'Impossible' else True)
+    df['alternative_day_2'] = df['alternative_day_2'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
+    df['alternative_day_3'] = df['alternative_day_3'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
+    df['simultaneous_family_class'] = df['simultaneous_family_class'].apply(lambda x: True if x == 'Oui' else False)
+    df['ideal_start_time'] = df['ideal_start_time'].str.slice(0, -3)
+    df['ideal_end_time'] = df['ideal_end_time'].str.slice(0, -3)
+    df['alternative_start_time_1'] = df['alternative_start_time_1'].str.slice(0, -3)
+    df['alternative_end_time_1'] = df['alternative_end_time_1'].str.slice(0, -3)
+    df['alternative_start_time_2'] = df['alternative_start_time_2'].str.slice(0, -3)
+    df['alternative_end_time_2'] = df['alternative_end_time_2'].str.slice(0, -3)
+    df['alternative_start_time_3'] = df['alternative_start_time_3'].str.slice(0, -3)
+    df['alternative_end_time_3'] = df['alternative_end_time_3'].str.slice(0, -3)
     # Trim spaces and convert to lowercase for the rest of the columns.
     for col in df.columns:
-        if df[col].dtype == 'object':
+        if col != 'student_name' and df[col].dtype == 'object':
             df[col] = df[col].str.strip().str.lower()
 
     # Save the transformed dataframe to a new CSV file.

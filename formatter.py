@@ -1,30 +1,79 @@
+import csv
 from datetime import timedelta, datetime
-from itertools import groupby
 
-def format_schedule(schedule):
-    # Output dictionary
-    new_schedule = {}
+def print_schedules(schedule):
+    for teacher, schedule in schedule.items():
+        print(f"\n{teacher}'s Schedule:")
+        print_teacher_schedule(schedule)
 
-    # Iterate over each person in the original schedule
-    for teacher, timeslots in schedule.items():
-        # Sort the timeslots to ensure they are in the correct order
-        sorted_timeslots = sorted(timeslots.items())
 
-        # Group by the day and the student
-        for key, group in groupby(sorted_timeslots, lambda x: (x[0][0], x[1])):
-            time_range = list(group)
+def print_teacher_schedule(schedule):
+    availability_schedule = {
+        (day, time): student['Name'] if student is not None else "(Available)"
+        for (day, time), student in schedule.items()
+    }
 
-            # If there are multiple timeslots in the group, combine them
-            if len(time_range) > 1:
-                start_time = time_range[0][0][1]
-                end_time = (datetime.combine(datetime.today(), time_range[-1][0][1]) + timedelta(minutes=15)).time()
-                new_key = (key[0], f"{start_time.strftime('%H:%M')}-{end_time.strftime('%H:%M')}")
-            else:  # If there is only one timeslot, leave it as is
-                new_key = (key[0], f"{time_range[0][0][1].strftime('%H:%M')}-{(datetime.combine(datetime.today(), time_range[0][0][1]) + timedelta(minutes=15)).time().strftime('%H:%M')}")
+    # Determine the start and end times
+    times = [time for day, time in schedule.keys()]
+    start_time = datetime.strptime(min(times), "%H:%M")
+    end_time = datetime.strptime(max(times), "%H:%M")
 
-            # Add the timeslot(s) to the new schedule
-            if teacher not in new_schedule:
-                new_schedule[teacher] = {}
-            new_schedule[teacher][new_key] = key[1]
+    # Generate all 15-minute timeslots between start and end times
+    timeslots = []
+    current_time = start_time
+    while current_time <= end_time:
+        timeslots.append(current_time.strftime("%H:%M"))
+        current_time += timedelta(minutes=15)
 
-    return new_schedule
+    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+    timeslots = sorted(set(time for day, time in availability_schedule.keys()), key=lambda x: [int(part) for part in x.split(':')])
+
+    column_width = max(len(day) for day in days)
+    column_width = max(column_width, len("\033[92m(Available)\033[0m"))
+    column_width = max(column_width, max(len(str(value)) for value in availability_schedule.values()))
+
+    # Print header
+    print("Time   | " + " | ".join(day.ljust(column_width) for day in days))
+    print("-" * (9 + 4 * len(days) + column_width * len(days)))
+
+    # Print schedule
+    for time in timeslots:
+        row = [str(availability_schedule.get((day.lower(), time), "-" * column_width)).center(column_width).ljust(column_width) for day in days]
+        # Apply color codes to "(Available)"
+        row = [f"\033[92m{cell}\033[0m" if cell.strip() == "(Available)" else cell for cell in row]
+        print(f"{time} | " + " | ".join(row))
+
+def output_to_csv(schedule):
+    # Define the header
+    header = ['Client', 'Professional', 'Durée', 'Jour', 'Time', 'Email', 'Téléphone']
+
+    # Convert the data to a list of rows
+    rows = []
+    for teacher, lessons in schedule.items():
+        student_lessons = {}
+        for (day, time), lesson in lessons.items():
+            if lesson is None:
+                continue
+            name = lesson['Name']
+            email = lesson.get('email', '')
+            phone = lesson.get('phone', '')
+            duration = lesson.get('lesson_duration')
+            if name not in student_lessons:
+                student_lessons[name] = {
+                    'Client': name,
+                    'Professional': teacher,
+                    'Durée': duration,
+                    'Jour': day,
+                    'Time': time,
+                    'Email': email,
+                    'Téléphone': phone
+                }
+        # Append the student lessons to the rows
+        for student_lesson in student_lessons.values():
+            rows.append(student_lesson)
+
+    # Write to CSV file
+    with open('schedule.csv', 'w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=header)
+        writer.writeheader()
+        writer.writerows(rows)

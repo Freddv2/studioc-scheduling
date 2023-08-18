@@ -1,14 +1,11 @@
-import bisect
 import argparse
+import bisect
 import math
 from datetime import timedelta, datetime
 
-from matplotlib import pyplot as plt
-
-from formatter import format_schedule
-
 import pandas as pd
-import seaborn as sns
+
+from formatter import print_schedules, output_to_csv
 
 best_schedule = {}
 best_schedule_unassigned_students = {}
@@ -27,9 +24,9 @@ def assign_students(students, teachers):
         for _, teacher in teachers.iterrows():
             if student['instrument'] != teacher['instrument']:
                 continue
-            if not students_preferred_teacher(student, teacher):
+            if not students_preferred_teacher(student, teacher) and student['prioritise'] != "choix de l'enseignant(e)":
                 continue
-            if student['location'] != teacher['location']:
+            if student['location'] != teacher['location'] and not student['can_be_realocated']:
                 continue
             current_schedule = teachers_schedule[teacher['teacher_name']]
 
@@ -39,14 +36,15 @@ def assign_students(students, teachers):
             add_to_schedule(student_schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
             add_to_schedule(student_schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
 
-            assigned = assign_to_available_slot(current_schedule, student_schedule, int(student['lesson_duration']) // 15, student['student_name'])
+            assigned = assign_to_available_slot(current_schedule, student_schedule, int(student['lesson_duration']) // 15, student)
 
-            if not assigned:
-                unassigned_students.append(student['student_name'])
+            if assigned:
+                break
+
         else:
             unassigned_students.append(student['student_name'])
 
-    percent_matched = round((len(unassigned_students) / len(students)) * 100, 1)
+    percent_matched = round((1 - (len(unassigned_students) / len(students))) * 100, 1)
     update_best_iteration(percent_matched, teachers_schedule, unassigned_students)
 
 
@@ -95,17 +93,17 @@ def is_slot_available(schedule, day, quarter_hour_increments):
     return all(schedule.get((day, time), None) is None for time in quarter_hour_increments)
 
 
-def assign_student_to_slot(schedule, day, quarter_hour_increments, student_name):
+def assign_student_to_slot(schedule, day, quarter_hour_increments, student):
     for time in quarter_hour_increments:
-        schedule[(day, time)] = student_name
+        schedule[(day, time)] = {'Name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration']}
 
 
-def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student_name):
+def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student):
     for day, timeslots in student_timeslots.items():
         for timeslot in timeslots:
             lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
             if is_slot_available(schedule, day, lesson_start_time):
-                assign_student_to_slot(schedule, day, lesson_start_time, student_name)
+                assign_student_to_slot(schedule, day, lesson_start_time, student)
                 return True
     return False
 
@@ -140,23 +138,6 @@ def add_to_schedule(schedule, day, start_time, end_time):
                 bisect.insort(schedule[day], time_slot)
 
 
-def print_schedule(schedule):
-    days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
-    timeslots = sorted(set(time for day, time in schedule.keys()), key=lambda x: [int(part) for part in x.split(':')])
-
-    column_width = max(len(day) for day in days)
-    column_width = max(column_width, max(len(str(schedule.get((day, time), ''))) for time in timeslots for day in days))
-
-    # Print header
-    print("Time   | " + " | ".join(day.ljust(column_width) for day in days))
-    print("-" * (9 + 4 * len(days) + column_width * len(days)))
-
-    # Print schedule
-    for time in timeslots:
-        row = [str(schedule.get((day, time), "")).ljust(column_width) for day in days]
-        print(f"{time} | " + " | ".join(row))
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Studio C scheduling tool')
     parser.add_argument('-s', '--students_file', required=True, help='Path to the students CSV file')
@@ -170,19 +151,17 @@ if __name__ == '__main__':
     duration = args.duration
     start_time = datetime.now()
     iteration = 0
+    schedule = {}
     while best_schedule_match_percent < 100:
         shuffled_students = students.sample(frac=1).reset_index(drop=True)
         assign_students(shuffled_students, teachers)
         iteration += 1
-        print(f' {iteration} iteration run. Current best match % is {best_schedule_match_percent}')
+        print(f' {iteration} iteration ran. Best Scheduling match is {best_schedule_match_percent} %')
         if (datetime.now() - start_time).seconds >= duration:
-            formatted_teacher_schedules = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
-            print(f'Student matched at {best_schedule_match_percent}%. Schedule: {formatted_teacher_schedules}')
+            schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
             print(f'Unassigned students: {best_schedule_unassigned_students}')
+            print(f'Student matched at {best_schedule_match_percent}%.')
             break
 
-    for teacher, schedule in formatted_teacher_schedules.items():
-        print(f"\n{teacher}'s Schedule:")
-        print_schedule(schedule)
-
-    print_schedule(formatted_teacher_schedules)
+    print_schedules(schedule)
+    output_to_csv(schedule)
