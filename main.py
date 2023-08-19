@@ -12,6 +12,15 @@ best_schedule_unassigned_students = {}
 best_schedule_match_percent = 0
 
 
+def possible_teachers(student, teachers):
+    # Create a temporary list of teachers teaching the same instrument
+    teachers_that_teach_instrument = [teacher for _, teacher in teachers.iterrows() if student['instrument'] == teacher['instrument']]
+
+    # Sort the list so that preferred teachers come first
+    teachers_that_teach_instrument.sort(key=lambda teacher: not student['preferred_teacher'] == teacher['teacher_name'])
+    return teachers_that_teach_instrument
+
+
 def assign_students(students, teachers):
     teachers_schedule = create_schedule(teachers)
     students.sort_values(by='current_student', ascending=False)
@@ -21,11 +30,7 @@ def assign_students(students, teachers):
     for _, student in students.iterrows():
         if not student['want_lesson']:
             continue
-        for _, teacher in teachers.iterrows():
-            if student['instrument'] != teacher['instrument']:
-                continue
-            if not students_preferred_teacher(student, teacher) and student['prioritise'] != "choix de l'enseignant(e)":
-                continue
+        for teacher in possible_teachers(student, teachers):
             if student['location'] != teacher['location'] and not student['can_be_realocated']:
                 continue
             current_schedule = teachers_schedule[teacher['teacher_name']]
@@ -36,7 +41,7 @@ def assign_students(students, teachers):
             add_to_schedule(student_schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
             add_to_schedule(student_schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
 
-            assigned = assign_to_available_slot(current_schedule, student_schedule, int(student['lesson_duration']) // 15, student)
+            assigned = assign_to_available_slot(current_schedule, student_schedule, int(student['lesson_duration']) // 15, student, teacher)
 
             if assigned:
                 break
@@ -70,7 +75,7 @@ def time_plus(time, minutes):
 def create_schedule(teachers):
     schedule = {}
     for _, teacher in teachers.iterrows():
-        schedule[teacher['teacher_name']] = {}
+        schedule.setdefault(teacher['teacher_name'], {})
         time = datetime.strptime(teacher['start_time'], '%H:%M').time()
         end_time = datetime.strptime(teacher['end_time'], '%H:%M').time()
         while time < end_time:
@@ -90,20 +95,21 @@ def create_time_slots(start_time, end_time):
 
 
 def is_slot_available(schedule, day, quarter_hour_increments):
-    return all(schedule.get((day, time), None) is None for time in quarter_hour_increments)
+    return all((day, time) in schedule and schedule[(day, time)] is None for time in quarter_hour_increments)
 
 
-def assign_student_to_slot(schedule, day, quarter_hour_increments, student):
+def assign_student_to_slot(schedule, day, quarter_hour_increments, student, teacher):
     for time in quarter_hour_increments:
-        schedule[(day, time)] = {'Name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration']}
+        schedule[(day, time)] = {'Name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration'],
+                                 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
 
 
-def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student):
+def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student, teacher):
     for day, timeslots in student_timeslots.items():
         for timeslot in timeslots:
             lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
             if is_slot_available(schedule, day, lesson_start_time):
-                assign_student_to_slot(schedule, day, lesson_start_time, student)
+                assign_student_to_slot(schedule, day, lesson_start_time, student, teacher)
                 return True
     return False
 
@@ -164,4 +170,4 @@ if __name__ == '__main__':
             break
 
     print_schedules(schedule)
-    output_to_csv(schedule)
+    # output_to_csv(schedule)

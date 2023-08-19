@@ -1,6 +1,7 @@
 import csv
 from datetime import timedelta, datetime
 
+
 def print_schedules(schedule):
     for teacher, schedule in schedule.items():
         print(f"\n{teacher}'s Schedule:")
@@ -9,7 +10,7 @@ def print_schedules(schedule):
 
 def print_teacher_schedule(schedule):
     availability_schedule = {
-        (day, time): student['Name'] if student is not None else "(Available)"
+        (day, time): (student['Name'], student['preferred_teacher']) if student is not None else ("(Available)", None)
         for (day, time), student in schedule.items()
     }
 
@@ -38,10 +39,19 @@ def print_teacher_schedule(schedule):
 
     # Print schedule
     for time in timeslots:
-        row = [str(availability_schedule.get((day.lower(), time), "-" * column_width)).center(column_width).ljust(column_width) for day in days]
-        # Apply color codes to "(Available)"
-        row = [f"\033[92m{cell}\033[0m" if cell.strip() == "(Available)" else cell for cell in row]
+        row = []
+        for day in days:
+            cell, preferred_teacher = availability_schedule.get((day.lower(), time), ("-" * column_width, None))
+            cell = cell.center(column_width).ljust(column_width)
+            if preferred_teacher is None:
+                color_code = "\033[91m" if cell.strip() == "(Available)" else "\033[0m"
+            elif preferred_teacher:
+                color_code = "\033[92m"
+            else:
+                color_code = "\033[93m"
+            row.append(f"{color_code}{cell}\033[0m")
         print(f"{time} | " + " | ".join(row))
+
 
 def output_to_csv(schedule):
     # Define the header
