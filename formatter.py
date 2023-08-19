@@ -53,34 +53,46 @@ def print_teacher_schedule(schedule):
         print(f"{time} | " + " | ".join(row))
 
 
-def output_to_csv(schedule):
+def output_to_csv(schedule, unassigned_students):
     # Define the header
-    header = ['Client', 'Professional', 'Durée', 'Jour', 'Time', 'Email', 'Téléphone']
+    header = ['Élève', 'Professeur', 'Durée du cours', 'Jour de la semaine', 'Heure', 'Courriel', 'Téléphone']
 
     # Convert the data to a list of rows
     rows = []
-    for teacher, lessons in schedule.items():
+    for teacher, students in schedule.items():
         student_lessons = {}
-        for (day, time), lesson in lessons.items():
-            if lesson is None:
+        for (day, time), student in students.items():
+            if student is None:
                 continue
-            name = lesson['Name']
-            email = lesson.get('email', '')
-            phone = lesson.get('phone', '')
-            duration = lesson.get('lesson_duration')
+            name = student['Name']
+            email = student.get('email', '')
+            phone = student.get('phone', '')
+            duration = student.get('lesson_duration')
             if name not in student_lessons:
                 student_lessons[name] = {
-                    'Client': name,
-                    'Professional': teacher,
-                    'Durée': duration,
-                    'Jour': day,
-                    'Time': time,
-                    'Email': email,
+                    'Élève': name,
+                    'Professeur': teacher,
+                    'Durée du cours': duration,
+                    'Jour de la semaine': day,
+                    'Heure': time,
+                    'Courriel': email,
                     'Téléphone': phone
                 }
         # Append the student lessons to the rows
         for student_lesson in student_lessons.values():
             rows.append(student_lesson)
+
+    # Add unassigned students
+    for student in unassigned_students:
+        rows.append({
+            'Élève': student['name'],
+            'Professeur': 'Non assigné',
+            'Durée du cours': '',
+            'Jour de la semaine': '',
+            'Heure': '',
+            'Courriel': student.get('email', ''),
+            'Téléphone': student.get('phone_number', '')
+        })
 
     # Write to CSV file
     with open('schedule.csv', 'w', newline='', encoding='utf-8') as file:

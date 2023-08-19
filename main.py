@@ -9,7 +9,8 @@ from formatter import print_schedules, output_to_csv
 
 best_schedule = {}
 best_schedule_unassigned_students = {}
-best_schedule_match_percent = 0
+best_students_assignment_percentage = 0
+best_teachers_assignment_percentage = 0
 
 
 def possible_teachers(student, teachers):
@@ -47,20 +48,38 @@ def assign_students(students, teachers):
                 break
 
         else:
-            unassigned_students.append(student['student_name'])
+            unassigned_students.append({'name': student['student_name'], 'email': student['email'], 'phone': student['phone_number']})
 
-    percent_matched = round((1 - (len(unassigned_students) / len(students))) * 100, 1)
-    update_best_iteration(percent_matched, teachers_schedule, unassigned_students)
+    update_best_iteration(teachers_schedule, unassigned_students)
 
 
-def update_best_iteration(percent_matched, teacher_schedule, unassigned_students):
-    global best_schedule_match_percent
-    if percent_matched > best_schedule_match_percent:
-        best_schedule_match_percent = percent_matched
+def update_best_iteration(teachers_schedule, unassigned_students):
+    student_matched_percent = round((1 - (len(unassigned_students) / len(students))) * 100, 1)
+    teachers_assignment_percentage = calculate_teachers_assignment_percentage(teachers_schedule)
+
+    global best_students_assignment_percentage
+    if student_matched_percent > best_students_assignment_percentage:
+        best_students_assignment_percentage = student_matched_percent
         global best_schedule
-        best_schedule = teacher_schedule
+        best_schedule = teachers_schedule
         global best_schedule_unassigned_students
         best_schedule_unassigned_students = unassigned_students
+        global best_teachers_assignment_percentage
+        best_teachers_assignment_percentage = teachers_assignment_percentage
+
+
+def calculate_teachers_assignment_percentage(teachers_schedule):
+    total_percentage = 0
+    total_teachers = len(teachers_schedule)
+
+    for teacher, schedule in teachers_schedule.items():
+        total_timeslots = len(schedule)
+        timeslots_with_students = sum(1 for student_name in schedule.values() if student_name is not None)
+        teacher_percentage = (timeslots_with_students / total_timeslots) * 100
+        total_percentage += teacher_percentage
+
+    teachers_assignment_percentage = round(total_percentage / total_teachers, 1)
+    return teachers_assignment_percentage
 
 
 def time_plus(time, minutes):
@@ -158,16 +177,17 @@ if __name__ == '__main__':
     start_time = datetime.now()
     iteration = 0
     schedule = {}
-    while best_schedule_match_percent < 100:
+    while best_students_assignment_percentage < 100:
         shuffled_students = students.sample(frac=1).reset_index(drop=True)
         assign_students(shuffled_students, teachers)
         iteration += 1
-        print(f' {iteration} iteration ran. Best Scheduling match is {best_schedule_match_percent} %')
+        print(f' {iteration} iteration ran. Best Scheduling match is {best_students_assignment_percentage} %')
         if (datetime.now() - start_time).seconds >= duration:
             schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
             print(f'Unassigned students: {best_schedule_unassigned_students}')
-            print(f'Student matched at {best_schedule_match_percent}%.')
+            print(f'Student matched at {best_students_assignment_percentage}%.')
+            print(f'Teachers matched at {best_teachers_assignment_percentage}%.')
             break
 
     print_schedules(schedule)
-    # output_to_csv(schedule)
+    output_to_csv(schedule, best_schedule_unassigned_students)
