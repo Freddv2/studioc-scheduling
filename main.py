@@ -8,7 +8,7 @@ import pandas as pd
 from formatter import print_schedules, output_to_csv
 
 best_schedule = {}
-best_schedule_unassigned_students = {}
+best_processed_students = {}
 best_students_assignment_percentage = 0
 best_teachers_assignment_percentage = 0
 
@@ -25,45 +25,60 @@ def possible_teachers(student, teachers):
 def assign_students(students, teachers):
     teachers_schedule = create_schedule(teachers)
     students.sort_values(by='current_student', ascending=False)
-    unassigned_students = []
+    processed_students = []
 
     # Assign students to teachers
     for _, student in students.iterrows():
-        if not student['want_lesson']:
+        student_schedule = create_student_availability_schedule(student)
+
+        if any(p_student['name'] == student['student_name'] for p_student in processed_students):
             continue
+
+        if not student['want_lesson']:
+            add_to_process_students(processed_students, student, False, "Ne veux pas de lesson cette session")
+            continue
+
         for teacher in possible_teachers(student, teachers):
             if student['location'] != teacher['location'] and not student['can_be_realocated']:
                 continue
-            current_schedule = teachers_schedule[teacher['teacher_name']]
 
-            # The order of time slots to try to assign
-            student_schedule = {student['ideal_day']: create_time_slots(student['ideal_start_time'], student['ideal_end_time'])}
-            add_to_schedule(student_schedule, student['alternative_day_1'], student['alternative_start_time_1'], student['alternative_end_time_1'])
-            add_to_schedule(student_schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
-            add_to_schedule(student_schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
-
-            assigned = assign_to_available_slot(current_schedule, student_schedule, int(student['lesson_duration']) // 15, student, teacher)
-
+            teacher_schedule = teachers_schedule[teacher['teacher_name']]
+            assigned = assign_to_available_slot(teacher_schedule, student_schedule, int(student['lesson_duration']) // 15, student, teacher)
             if assigned:
+                add_to_process_students(processed_students, student, True, '')
                 break
 
         else:
-            unassigned_students.append({'name': student['student_name'], 'email': student['email'], 'phone': student['phone_number']})
+            add_to_process_students(processed_students, student, False, "Pas de plage horaire qui concorde")
 
-    update_best_iteration(teachers_schedule, unassigned_students)
+    update_best_iteration(teachers_schedule, processed_students)
 
 
-def update_best_iteration(teachers_schedule, unassigned_students):
-    student_matched_percent = round((1 - (len(unassigned_students) / len(students))) * 100, 1)
+def create_student_availability_schedule(student):
+    schedule = {student['ideal_day']: create_time_slots(student['ideal_start_time'], student['ideal_end_time'])}
+    add_to_schedule(schedule, student['alternative_day_1'], student['alternative_start_time_1'], student['alternative_end_time_1'])
+    add_to_schedule(schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
+    add_to_schedule(schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
+    return schedule
+
+def add_to_process_students(processed_students, student, assigned, unassign_reason):
+    reason = '' if assigned else unassign_reason
+    processed_students.append({'name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration'], 'assigned': assigned, 'unassignment_reason': reason})
+
+
+def update_best_iteration(teachers_schedule, processed_students):
+    nb_of_assigned_students = sum(1 for student in processed_students if student['assigned'] is True)
+    percent_of_assigned_students = round((nb_of_assigned_students / len(processed_students)) * 100, 1)
+
     teachers_assignment_percentage = calculate_teachers_assignment_percentage(teachers_schedule)
 
     global best_students_assignment_percentage
-    if student_matched_percent > best_students_assignment_percentage:
-        best_students_assignment_percentage = student_matched_percent
+    if percent_of_assigned_students > best_students_assignment_percentage:
+        best_students_assignment_percentage = percent_of_assigned_students
         global best_schedule
         best_schedule = teachers_schedule
-        global best_schedule_unassigned_students
-        best_schedule_unassigned_students = unassigned_students
+        global best_processed_students
+        best_processed_students = processed_students
         global best_teachers_assignment_percentage
         best_teachers_assignment_percentage = teachers_assignment_percentage
 
@@ -119,8 +134,7 @@ def is_slot_available(schedule, day, quarter_hour_increments):
 
 def assign_student_to_slot(schedule, day, quarter_hour_increments, student, teacher):
     for time in quarter_hour_increments:
-        schedule[(day, time)] = {'Name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration'],
-                                 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
+        schedule[(day, time)] = {'Name': student['student_name'], 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
 
 
 def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student, teacher):
@@ -184,10 +198,9 @@ if __name__ == '__main__':
         print(f' {iteration} iteration ran. Best Scheduling match is {best_students_assignment_percentage} %')
         if (datetime.now() - start_time).seconds >= duration:
             schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
-            print(f'Unassigned students: {best_schedule_unassigned_students}')
             print(f'Student matched at {best_students_assignment_percentage}%.')
             print(f'Teachers matched at {best_teachers_assignment_percentage}%.')
             break
 
     print_schedules(schedule)
-    output_to_csv(schedule, best_schedule_unassigned_students)
+    output_to_csv(schedule, best_processed_students)
