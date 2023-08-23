@@ -62,12 +62,18 @@ def main(input_file, output_file):
     df['alternative_end_time_3'] = df['alternative_end_time_3'].str.slice(0, -3)
     # Trim spaces and convert to lowercase for the rest of the columns.
     for col in df.columns:
-        if col != 'student_name' and df[col].dtype == 'object':
+        if df[col].dtype == 'object':
             df[col] = df[col].str.strip().str.lower()
 
     # Save the transformed dataframe to a new CSV file.
     df.to_csv(output_file, index=False)
 
+    # Iterate through the rows, and for each non-empty sibling_name, check if it matches any student_name in other rows.
+    for index, sibling_name in df['sibling_name'].items():
+        if pd.notna(sibling_name) and sibling_name.strip():
+            # Check if the sibling_name exists in student_name of other rows.
+            if sibling_name not in df.loc[df.index != index, 'student_name'].values:
+                print(f"Unmatched sibling name: {sibling_name}")
 
 if __name__ == "__main__":
     # Define the command line arguments.

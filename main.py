@@ -13,6 +13,31 @@ best_students_assignment_percentage = 0
 best_teachers_assignment_percentage = 0
 
 
+def assign_students(prioritized_students, teachers):
+    teachers_schedule = create_schedule(teachers)
+    prioritized_students = sort_students(prioritized_students)
+    processed_students = []
+
+    for _, student in prioritized_students.iterrows():
+        if is_student_processed(processed_students, student):
+            continue
+
+        if not student['want_lesson']:
+            add_to_process_students(processed_students, [student], False)
+            continue
+
+        sibling_name = student.get('sibling_name')
+        if student['simultaneous_family_class'] and sibling_name:
+            sibling_row = prioritized_students[prioritized_students['student_name'].str.lower() == sibling_name]
+            if not sibling_row.empty:
+                if process_sibling_students(student, sibling_row.iloc[0], teachers_schedule, processed_students):
+                    continue
+
+        process_single_student(student, teachers_schedule, processed_students)
+
+    update_best_iteration(teachers_schedule, processed_students)
+
+
 def possible_teachers(student, teachers):
     # Create a temporary list of teachers teaching the same instrument
     teachers_that_teach_instrument = [teacher for _, teacher in teachers.iterrows() if student['instrument'] in map(str.strip, teacher['instrument'].split(","))]
@@ -42,33 +67,6 @@ def sort_students(students):
 # Helper function to check if the student has been processed
 def is_student_processed(processed_students, student):
     return any(p_student['name'] == student['student_name'] for p_student in processed_students)
-
-
-def assign_students(prioritized_students, teachers):
-    teachers_schedule = create_schedule(teachers)
-    prioritized_students = sort_students(prioritized_students)
-    processed_students = []
-
-    for _, student in prioritized_students.iterrows():
-        if is_student_processed(processed_students, student):
-            continue
-
-        if not student['want_lesson']:
-            add_to_process_students(processed_students, [student], False)
-            continue
-
-        sibling_name = student.get('sibling_name')
-        if student['simultaneous_family_class'] and sibling_name:
-            sibling_row = prioritized_students[prioritized_students['student_name'].str.lower() == sibling_name]
-            if not sibling_row.empty:
-                if process_sibling_students(student, sibling_row.iloc[0], teachers_schedule, processed_students):
-                    continue
-            else:
-                print(f'Warning: sibling {sibling_name} not found')
-
-        process_single_student(student, teachers_schedule, processed_students)
-
-    update_best_iteration(teachers_schedule, processed_students)
 
 
 def process_single_student(student, teachers_schedule, processed_students):
@@ -331,6 +329,7 @@ if __name__ == '__main__':
             schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
             print(f'Student matched at {best_students_assignment_percentage}%.')
             print(f'Teachers matched at {best_teachers_assignment_percentage}%.')
+            print(f'Processed students {best_processed_students}')
             break
 
     print_schedules(schedule)
