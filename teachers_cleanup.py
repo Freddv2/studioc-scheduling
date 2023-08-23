@@ -10,7 +10,14 @@ def main(input_file, output_file):
         "Journée": "day",
         "Location": "location",
         "Heure début": "start_time",
-        "Heure Fin": "end_time"
+        "Heure Fin": "end_time",
+        "Début Pause 1": "start_break_1",
+        "Fin Pause 1": "end_break_1",
+        "Durée Pause 1": "length_break_1",
+        "Début Pause 2": "start_break_2",
+        "Fin Pause 2": "end_break_2",
+        "Durée Pause 2": "length_break_2",
+
     }
 
     # Read the CSV file.

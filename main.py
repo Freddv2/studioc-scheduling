@@ -4,6 +4,7 @@ import math
 from datetime import timedelta, datetime
 
 import pandas as pd
+from pandas import CategoricalDtype
 
 from formatter import print_schedules, output_to_csv
 
@@ -15,16 +16,35 @@ best_teachers_assignment_percentage = 0
 
 def possible_teachers(student, teachers):
     # Create a temporary list of teachers teaching the same instrument
-    teachers_that_teach_instrument = [teacher for _, teacher in teachers.iterrows() if student['instrument'] == teacher['instrument']]
+    teachers_that_teach_instrument = [teacher for _, teacher in teachers.iterrows() if student['instrument'] in map(str.strip, teacher['instrument'].split(","))]
 
     # Sort the list so that preferred teachers come first
     teachers_that_teach_instrument.sort(key=lambda teacher: not student['preferred_teacher'] == teacher['teacher_name'])
     return teachers_that_teach_instrument
 
 
+def sort_students(students):
+    # Order of instruments priority
+    instrument_order = ["Violon", "Piano", "Chant", "Guitare", "Ukulélé", "Batterie"]
+
+    def instrument_priority(instrument):
+        try:
+            return instrument_order.index(instrument)
+        except ValueError:
+            return len(instrument_order)
+
+    students['instrument_priority'] = students['instrument'].apply(instrument_priority)
+    return students.sort_values(
+        by=['simultaneous_family_class', 'current_student', 'instrument_priority'],
+        ascending=[False, False, True]
+    )
+
+
 def assign_students(students, teachers):
     teachers_schedule = create_schedule(teachers)
-    students.sort_values(by='current_student', ascending=False)
+
+    students = sort_students(students)
+
     processed_students = []
 
     # Assign students to teachers
@@ -35,7 +55,36 @@ def assign_students(students, teachers):
             continue
 
         if not student['want_lesson']:
-            add_to_process_students(processed_students, student, False, "Ne veux pas de lesson cette session")
+            add_to_process_students(processed_students, student, False)
+            continue
+
+        if student['simultaneous_family_class'] and not pd.isna(student['sibling_name']):
+            sibling_name = student['sibling_name']
+            sibling_row = students[students['student_name'].str.lower() == sibling_name]
+            if not sibling_row.empty:
+                sibling = sibling_row.iloc[0]
+                if sibling['instrument'] == student['instrument']:
+                    for teacher in possible_teachers(student, teachers):
+                        if student['location'] != teacher['location'] and not student['can_be_realocated']:
+                            continue
+
+                        teacher_schedule = teachers_schedule[teacher['teacher_name']]
+                        assigned_sibling = assign_siblings_one_after_another(teacher_schedule, student_schedule, int(student['lesson_duration']) // 15, student, sibling, teacher)
+
+                        if assigned_sibling:
+                            add_to_process_students(processed_students, student, True)
+                            add_to_process_students(processed_students, sibling, True)
+                            break
+                else:
+                    assigned_sibling = assign_sibling_at_the_same_time(teachers_schedule, student_schedule, int(student['lesson_duration']) // 15, student, sibling, teachers)
+                    if assigned_sibling:
+                        add_to_process_students(processed_students, student, True)
+                        add_to_process_students(processed_students, sibling, True)
+                        continue
+            else:
+                print(f'Warning: sibling {sibling_name} not found')
+
+        if any(p_student['name'] == student['student_name'] for p_student in processed_students):
             continue
 
         for teacher in possible_teachers(student, teachers):
@@ -45,13 +94,55 @@ def assign_students(students, teachers):
             teacher_schedule = teachers_schedule[teacher['teacher_name']]
             assigned = assign_to_available_slot(teacher_schedule, student_schedule, int(student['lesson_duration']) // 15, student, teacher)
             if assigned:
-                add_to_process_students(processed_students, student, True, '')
+                add_to_process_students(processed_students, student, True)
                 break
 
         else:
-            add_to_process_students(processed_students, student, False, "Pas de plage horaire qui concorde")
+            add_to_process_students(processed_students, student, False)
 
     update_best_iteration(teachers_schedule, processed_students)
+
+
+def assign_siblings_one_after_another(teacher_schedule, student_schedule, lesson_duration_in_quarter_hours, student, sibling, teacher):
+    for day, timeslots in student_schedule.items():
+        for timeslot in timeslots:
+            lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
+            sibling_start_time = [time_plus(time, timedelta(minutes=lesson_duration_in_quarter_hours * 15)) for time in lesson_start_time]
+
+            if is_slot_available(teacher_schedule, day, lesson_start_time) and is_slot_available(teacher_schedule, day, sibling_start_time):
+                assign_student_to_slot(teacher_schedule, day, lesson_start_time, student, teacher)
+                assign_student_to_slot(teacher_schedule, day, sibling_start_time, sibling, teacher)
+                print(f'Siblings: {student["student_name"]} & {sibling["student_name"]} were assigned one after the other')
+                return True
+    return False
+
+
+def assign_sibling_at_the_same_time(teachers_schedule, student_schedule, lesson_duration_in_quarter_hours, student, sibling, teachers):
+    possible_teachers_student = possible_teachers(student, teachers)
+    possible_teachers_sibling = possible_teachers(sibling, teachers)
+
+    for day, timeslots in student_schedule.items():
+        for timeslot in timeslots:
+            student_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
+            sibling_start_time_same = [time_plus(time, timedelta(minutes=0)) for time in student_start_time]
+            sibling_start_time_before = [time_plus(time, timedelta(minutes=-15)) for time in student_start_time]
+            sibling_start_time_after = [time_plus(time, timedelta(minutes=15)) for time in student_start_time]
+
+            for student_teacher in possible_teachers_student:
+                if student['location'] != student_teacher['location'] and not student['can_be_realocated']:
+                    continue
+                student_teacher_schedule = teachers_schedule[student_teacher['teacher_name']]
+                for sibling_teacher in possible_teachers_sibling:
+                    if sibling['location'] != sibling_teacher['location'] and not student['can_be_realocated']:
+                        continue
+                    sibling_teacher_schedule = teachers_schedule[sibling_teacher['teacher_name']]
+                    for sibling_start_time in [sibling_start_time_same, sibling_start_time_before, sibling_start_time_after]:
+                        if is_slot_available(student_teacher_schedule, day, student_start_time) and is_slot_available(sibling_teacher_schedule, day, sibling_start_time):
+                            assign_student_to_slot(student_teacher_schedule, day, student_start_time, student, student_teacher)
+                            assign_student_to_slot(sibling_teacher_schedule, day, sibling_start_time, sibling, sibling_teacher)
+                            print(f'Siblings: {student["student_name"]} & {sibling["student_name"]} were assigned at the same time')
+                            return True
+    return False
 
 
 def create_student_availability_schedule(student):
@@ -61,9 +152,9 @@ def create_student_availability_schedule(student):
     add_to_schedule(schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
     return schedule
 
-def add_to_process_students(processed_students, student, assigned, unassign_reason):
-    reason = '' if assigned else unassign_reason
-    processed_students.append({'name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration'], 'assigned': assigned, 'unassignment_reason': reason})
+
+def add_to_process_students(processed_students, student, assigned):
+    processed_students.append({'name': student['student_name'], 'email': student['email'], 'phone': student['phone_number'], 'lesson_duration': student['lesson_duration'], 'assigned': assigned})
 
 
 def update_best_iteration(teachers_schedule, processed_students):
