@@ -243,21 +243,21 @@ def create_time_slots(start_time, end_time):
     return time_slots
 
 
-def is_slot_available(schedule, day, quarter_hour_increments):
-    return all((day, time) in schedule and schedule[(day, time)] is None for time in quarter_hour_increments)
+def is_slot_available(teacher_schedule, day, quarter_hour_increments):
+    return all((day, time) in teacher_schedule and teacher_schedule[(day, time)] is None for time in quarter_hour_increments)
 
 
-def assign_student_to_slot(schedule, day, quarter_hour_increments, student, teacher):
+def assign_student_to_slot(teacher_schedule, day, quarter_hour_increments, student, teacher):
     for time in quarter_hour_increments:
-        schedule[(day, time)] = {'Name': student['student_name'], 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
+        teacher_schedule[(day, time)] = {'Name': student['student_name'], 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
 
 
-def assign_to_available_slot(schedule, student_timeslots, lesson_duration_in_quarter_hours, student, teacher):
+def assign_to_available_slot(teacher_schedule, student_timeslots, lesson_duration_in_quarter_hours, student, teacher):
     for day, timeslots in student_timeslots.items():
         for timeslot in timeslots:
             lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
-            if is_slot_available(schedule, day, lesson_start_time):
-                assign_student_to_slot(schedule, day, lesson_start_time, student, teacher)
+            if is_slot_available(teacher_schedule, day, lesson_start_time) and teacher_can_still_take_breaks(teacher_schedule, teacher):
+                assign_student_to_slot(teacher_schedule, day, lesson_start_time, student, teacher)
                 return True
     return False
 
@@ -290,6 +290,22 @@ def add_to_schedule(schedule, day, start_time, end_time):
                 continue
             else:
                 bisect.insort(schedule[day], time_slot)
+
+
+def is_during_break(time, start_break, end_break):
+    return start_break <= time.strftime("%H:%M") < end_break
+
+
+def teacher_can_still_take_breaks(teacher_schedule, teacher):
+    return teacher_can_still_take_break(teacher_schedule, teacher['start_break_1'], teacher['end_break_1'], teacher['length_break_1']) and teacher_can_still_take_break(teacher_schedule, teacher['start_break_2'], teacher['end_break_2'],
+                                                                                                                                                                        teacher['length_break_2'])
+
+
+def teacher_can_still_take_break(teacher_schedule, start, end, length):
+    if pd.isna(start) or pd.isna(end) or pd.isna(length):
+        return True
+    available_break_time = sum(1 for day, time in teacher_schedule if is_during_break(time, start, end) and teacher_schedule[(day, time)] is None)
+    return available_break_time >= length
 
 
 if __name__ == '__main__':
