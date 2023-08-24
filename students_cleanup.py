@@ -45,9 +45,9 @@ def main(input_file, output_file):
     # Clean up values.
     df['want_lesson'] = df['want_lesson'].apply(lambda x: True if x == 'Oui' else False)
     df['current_student'] = df['current_student'].apply(lambda x: True if x == 'Oui, je suis un élève actuel.' else False)
-    df['preferred_teacher'] = df['preferred_teacher'].apply(lambda x: '' if x in ['Je ne sais pas / Pas de préférence', 'Je suis un nouvel élève', None] else str(x).split('.', 1)[0])
+    df['preferred_teacher'] = df['preferred_teacher'].apply(lambda teacher_name: '' if teacher_name in ['Je ne sais pas / Pas de préférence', 'Je suis un nouvel élève', None] or pd.isna(teacher_name) else clean_preferred_teacher_name(teacher_name))
     df['location'] = df['location'].apply(lambda x: 'Rosemere' if x == 'École de Rosemère - 399 Chemin de la Grande-Côte, Local A' else ('Lorraine' if x == 'École de Lorraine - 95 Boul. de Gaulle, Suite 205' else ''))
-    df['lesson_duration'] = df['lesson_duration'].apply(lambda x: 60 if x == '60 Minutes' else (45 if x == 'École de Lorraine - 95 Boul. de Gaulle, Suite 205' else 30))
+    df['lesson_duration'] = df['lesson_duration'].apply(lambda x: 60 if x == '60 Minutes' else (45 if x == '45 Minutes' else 30))
     df['can_be_realocated'] = df['can_be_realocated'].apply(lambda x: False if x == 'Impossible' else True)
     df['alternative_day_2'] = df['alternative_day_2'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
     df['alternative_day_3'] = df['alternative_day_3'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
@@ -74,6 +74,12 @@ def main(input_file, output_file):
             # Check if the sibling_name exists in student_name of other rows.
             if sibling_name not in df.loc[df.index != index, 'student_name'].values:
                 print(f"Unmatched sibling name: {sibling_name}")
+
+
+def clean_preferred_teacher_name(teacher_name):
+    clean_teacher_name = teacher_name.split(".", 1)
+    return clean_teacher_name[0] + "." if len(clean_teacher_name) > 1 else teacher_name
+
 
 if __name__ == "__main__":
     # Define the command line arguments.

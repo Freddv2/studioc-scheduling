@@ -13,8 +13,7 @@ best_students_assignment_percentage = 0
 best_teachers_assignment_percentage = 0
 
 
-def assign_students(prioritized_students, teachers):
-    teachers_schedule = create_schedule(teachers)
+def assign_students(prioritized_students, teachers_schedule):
     prioritized_students = sort_students(prioritized_students)
     processed_students = []
 
@@ -49,19 +48,15 @@ def possible_teachers(student, teachers):
 
 def sort_students(students):
     # Order of instruments priority
-    instrument_order = ["Violon", "Piano", "Chant", "Guitare", "Ukulélé", "Batterie"]
+    instrument_order = ["violon", "piano", "chant", "guitare", "ukulélé", "batterie / percussion"]
 
-    def instrument_priority(instrument):
-        try:
-            return instrument_order.index(instrument)
-        except ValueError:
-            return len(instrument_order)
+    def instrument_idx(instrument):
+        return instrument_order.index(instrument) if instrument in instrument_order else len(instrument_order)
 
-    students['instrument_priority'] = students['instrument'].apply(instrument_priority)
     return students.sort_values(
-        by=['simultaneous_family_class', 'current_student', 'instrument_priority'],
-        ascending=[False, False, True]
-    )
+        by=['simultaneous_family_class', 'current_student', 'instrument'],
+        ascending=[False, False, True],
+        key=lambda col: col.map(instrument_idx) if col.name == 'instrument' else col)
 
 
 # Helper function to check if the student has been processed
@@ -250,8 +245,8 @@ def assign_student_to_slot(teacher_schedule, day, quarter_hour_increments, stude
         teacher_schedule[(day, time)] = {'Name': student['student_name'], 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
 
 
-def assign_to_available_slot(teacher_schedule, student_timeslots, lesson_duration_in_quarter_hours, student, teacher):
-    for day, timeslots in student_timeslots.items():
+def assign_to_available_slot(teacher_schedule, student_schedule, lesson_duration_in_quarter_hours, student, teacher):
+    for day, timeslots in student_schedule.items():
         for timeslot in timeslots:
             lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
             if is_slot_available(teacher_schedule, day, lesson_start_time) and teacher_can_still_take_breaks(teacher_schedule, teacher):
@@ -295,8 +290,7 @@ def is_during_break(time, start_break, end_break):
 
 
 def teacher_can_still_take_breaks(teacher_schedule, teacher):
-    return teacher_can_still_take_break(teacher_schedule, teacher['start_break_1'], teacher['end_break_1'], teacher['length_break_1']) and teacher_can_still_take_break(teacher_schedule, teacher['start_break_2'], teacher['end_break_2'],
-                                                                                                                                                                        teacher['length_break_2'])
+    return teacher_can_still_take_break(teacher_schedule, teacher['start_break_1'], teacher['end_break_1'], teacher['length_break_1']) and teacher_can_still_take_break(teacher_schedule, teacher['start_break_2'], teacher['end_break_2'],teacher['length_break_2'])
 
 
 def teacher_can_still_take_break(teacher_schedule, start, end, length):
@@ -320,9 +314,10 @@ if __name__ == '__main__':
     start_time = datetime.now()
     iteration = 0
     schedule = {}
+    teachers_schedule = create_schedule(teachers)
     while best_students_assignment_percentage < 100:
-        shuffled_students = students.sample(frac=1).reset_index(drop=True)
-        assign_students(shuffled_students, teachers)
+        # shuffled_students = students.sample(frac=1).reset_index(drop=True)
+        assign_students(students, teachers_schedule)
         iteration += 1
         print(f' {iteration} iteration ran. Best Scheduling match is {best_students_assignment_percentage} %')
         if (datetime.now() - start_time).seconds >= duration:
