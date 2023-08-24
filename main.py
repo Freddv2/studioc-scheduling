@@ -236,10 +236,6 @@ def create_time_slots(start_time, end_time):
     return time_slots
 
 
-def is_slot_available(teacher_schedule, day, quarter_hour_increments):
-    return all((day, time) in teacher_schedule and teacher_schedule[(day, time)] is None for time in quarter_hour_increments)
-
-
 def assign_student_to_slot(teacher_schedule, day, quarter_hour_increments, student, teacher):
     for time in quarter_hour_increments:
         teacher_schedule[(day, time)] = {'Name': student['student_name'], 'preferred_teacher': True if pd.isna(student['preferred_teacher']) or student['preferred_teacher'] == teacher['teacher_name'] else False}
@@ -249,10 +245,15 @@ def assign_to_available_slot(teacher_schedule, student_schedule, lesson_duration
     for day, timeslots in student_schedule.items():
         for timeslot in timeslots:
             lesson_start_time = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(lesson_duration_in_quarter_hours)]
-            if is_slot_available(teacher_schedule, day, lesson_start_time) and teacher_can_still_take_breaks(teacher_schedule, teacher):
-                assign_student_to_slot(teacher_schedule, day, lesson_start_time, student, teacher)
+            if is_slot_available(teacher_schedule, day, lesson_start_time):
+                if teacher_can_still_take_breaks(teacher_schedule, teacher, lesson_start_time, student):
+                    assign_student_to_slot(teacher_schedule, day, lesson_start_time, student, teacher)
                 return True
     return False
+
+
+def is_slot_available(teacher_schedule, day, quarter_hour_increments):
+    return all((day, time) in teacher_schedule and teacher_schedule[(day, time)] is None for time in quarter_hour_increments)
 
 
 def students_preferred_teacher(student, teacher):
@@ -289,15 +290,30 @@ def is_during_break(time, start_break, end_break):
     return start_break <= time.strftime("%H:%M") < end_break
 
 
-def teacher_can_still_take_breaks(teacher_schedule, teacher):
-    return teacher_can_still_take_break(teacher_schedule, teacher['start_break_1'], teacher['end_break_1'], teacher['length_break_1']) and teacher_can_still_take_break(teacher_schedule, teacher['start_break_2'], teacher['end_break_2'],teacher['length_break_2'])
+def teacher_can_still_take_breaks(teacher_schedule, teacher, lesson_start_time, student):
+    temp_teacher_schedule = teacher_schedule.copy()
+    assign_student_to_slot(temp_teacher_schedule, teacher["day"], lesson_start_time, student, teacher)
+
+    return (teacher_can_still_take_break(teacher_schedule, teacher["day"], teacher['start_break_1'], teacher['end_break_1'], teacher['length_break_1'])
+            and teacher_can_still_take_break(teacher_schedule, teacher["day"], teacher['start_break_2'], teacher['end_break_2'], teacher['length_break_2']))
 
 
-def teacher_can_still_take_break(teacher_schedule, start, end, length):
-    if pd.isna(start) or pd.isna(end) or pd.isna(length):
+def teacher_can_still_take_break(teacher_schedule, day, start, end, duration_in_minutes):
+    if pd.isna(start) or pd.isna(end) or pd.isna(duration_in_minutes):
         return True
-    available_break_time = sum(1 for day, time in teacher_schedule if is_during_break(time, start, end) and teacher_schedule[(day, time)] is None)
-    return available_break_time >= length
+
+    consecutive_15_minutes_break = 0
+    for d, t in teacher_schedule:
+        if d == day and is_during_break(t, start, end):
+            if teacher_schedule[(d, t)] is None:
+                consecutive_15_minutes_break += 1
+                if consecutive_15_minutes_break >= (duration_in_minutes // 15):
+                    return True
+            else:
+                # Reset the consecutive break time counter if the slot is occupied
+                consecutive_15_minutes_break = 0
+
+    return False
 
 
 if __name__ == '__main__':
