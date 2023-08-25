@@ -4,21 +4,8 @@
 1. **Python**: Make sure Python is installed on your system. You can download it from the [official Python website](https://www.python.org/downloads/).
 2. **Libraries**: The scripts require certain Python libraries like Pandas. You can install them using the following command in the terminal or command prompt:
    ```bash
-   pip install pandas
+   pip install pandas colorama
    ```
-
-## Scripts
-### 1. students_cleanup.py
-Cleans up the students' information file, renaming columns and performing other necessary clean-up tasks.
-- **Usage**: `python students_cleanup.py --input INPUT_FILE --output OUTPUT_FILE`
-
-### 2. teachers_cleanup.py
-Cleans up the teachers' information file, renaming columns and performing other necessary clean-up tasks.
-- **Usage**: `python teachers_cleanup.py --input INPUT_FILE --output OUTPUT_FILE`
-
-### 3. main.py
-The main driver script that reads the cleaned students and teachers files, assigns students to teachers based on preferences, and prints the schedules in the console. It also output the schedule to a CSV file.
-- **Usage**: `python main.py --students STUDENTS_FILE --teachers TEACHERS_FILE`
 
 ## How to Use
 1. **Download the Scripts**: Make sure all four Python scripts (`students_cleanup.py`, `teachers_cleanup.py`, `formatter.py`, `main.py`) are in the same folder on your computer.

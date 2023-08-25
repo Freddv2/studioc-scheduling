@@ -29,9 +29,9 @@ def print_teacher_schedule(schedule):
     days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
     timeslots = sorted(set(time for day, time in availability_schedule.keys()), key=lambda x: [int(part) for part in x.split(':')])
 
-    column_width = max(len(day) for day in days)
-    column_width = max(column_width, len("\033[92m(Available)\033[0m"))
-    column_width = max(column_width, max(len(str(value)) for value in availability_schedule.values()))
+    # Determine the column width based on the longest student name across the entire schedule
+    column_width = max(len(str(value[0])) for value in availability_schedule.values())
+    column_width = max(column_width, max(len(day) for day in days))  # Make sure the width is not smaller than day names
 
     # Print header
     print("Time   | " + " | ".join(day.ljust(column_width) for day in days))
@@ -41,8 +41,8 @@ def print_teacher_schedule(schedule):
     for time in timeslots:
         row = []
         for day in days:
-            cell, preferred_teacher = availability_schedule.get((day.lower(), time), ("-" * column_width, None))
-            cell = cell.center(column_width).ljust(column_width)
+            cell, preferred_teacher = availability_schedule.get((day.lower(), time), (" " * column_width, None))
+            cell = cell.center(column_width)  # Center the text within the column
             if preferred_teacher is None:
                 color_code = "\033[91m" if cell.strip() == "(Available)" else "\033[0m"
             elif preferred_teacher:
@@ -53,49 +53,11 @@ def print_teacher_schedule(schedule):
         print(f"{time} | " + " | ".join(row))
 
 
-def output_to_csv(schedule, unassigned_students):
-    # Define the header
-    header = ['Élève', 'Professeur', 'Durée du cours', 'Jour de la semaine', 'Heure', 'Courriel', 'Téléphone']
-
-    # Convert the data to a list of rows
-    rows = []
-    for teacher, students in schedule.items():
-        student_lessons = {}
-        for (day, time), student in students.items():
-            if student is None:
-                continue
-            name = student['Name']
-            email = student.get('email', '')
-            phone = student.get('phone', '')
-            duration = student.get('lesson_duration')
-            if name not in student_lessons:
-                student_lessons[name] = {
-                    'Élève': name,
-                    'Professeur': teacher,
-                    'Durée du cours': duration,
-                    'Jour de la semaine': day,
-                    'Heure': time,
-                    'Courriel': email,
-                    'Téléphone': phone
-                }
-        # Append the student lessons to the rows
-        for student_lesson in student_lessons.values():
-            rows.append(student_lesson)
-
-    # Add unassigned students
-    for student in unassigned_students:
-        rows.append({
-            'Élève': student['name'],
-            'Professeur': 'Non assigné',
-            'Durée du cours': '',
-            'Jour de la semaine': '',
-            'Heure': '',
-            'Courriel': student.get('email', ''),
-            'Téléphone': student.get('phone_number', '')
-        })
-
-    # Write to CSV file
+def output_to_csv(students):
+    headers = students[0].keys()
     with open('schedule.csv', 'w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=header)
+        writer = csv.DictWriter(file, fieldnames=headers)
+        # Write the header
         writer.writeheader()
-        writer.writerows(rows)
+        # Write the rows
+        writer.writerows(students)

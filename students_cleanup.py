@@ -35,6 +35,7 @@ def main(input_file, output_file):
         "Assigned_Day": "assigned_day",
         "Assigned_Start_Time": "assigned_start_time",
         "Assigned_Duration": "assigned_duration",
+        "Âge de l'élève (requis pour les enfants seulement)": "age",
     }
 
     # Read the CSV file.
