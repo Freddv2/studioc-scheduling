@@ -355,13 +355,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Studio C scheduling tool')
     parser.add_argument('-s', '--students_file', required=True, help='Path to the students CSV file')
     parser.add_argument('-t', '--teachers_file', required=True, help='Path to the teachers CSV file')
-    parser.add_argument('-d', '--duration', type=int, required=True, help='Max scheduling duration in seconds')
+    # parser.add_argument('-d', '--duration', type=int, required=True, help='Max scheduling duration in seconds')
 
     args = parser.parse_args()
 
     students = pd.read_csv(args.students_file)
     teachers = pd.read_csv(args.teachers_file)
-    duration = args.duration
+    duration = 0
     start_time = datetime.now()
     iteration = 0
     schedule = {}

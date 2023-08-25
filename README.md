@@ -18,7 +18,7 @@ Cleans up the teachers' information file, renaming columns and performing other 
 
 ### 3. main.py
 The main driver script that reads the cleaned students and teachers files, assigns students to teachers based on preferences, and prints the schedules in the console. It also output the schedule to a CSV file.
-- **Usage**: `python main.py --students STUDENTS_FILE --teachers TEACHERS_FILE --output OUTPUT_FILE`
+- **Usage**: `python main.py --students STUDENTS_FILE --teachers TEACHERS_FILE`
 
 ## How to Use
 1. **Download the Scripts**: Make sure all four Python scripts (`students_cleanup.py`, `teachers_cleanup.py`, `formatter.py`, `main.py`) are in the same folder on your computer.
@@ -31,7 +31,7 @@ The main driver script that reads the cleaned students and teachers files, assig
    Replace `path/to/your/folder` with the actual path to the folder containing the scripts.
 5. **Run the Command**: Copy and paste the following command into the terminal, replacing the filenames with your actual file names:
    ```bash
-   python students_cleanup.py --input students_input.csv --output students_cleaned.csv &&    python teachers_cleanup.py --input teachers_input.csv --output teachers_cleaned.csv &&    python main.py --students students_cleaned.csv --teachers teachers_cleaned.csv --output schedule_output.csv
+   python students_cleanup.py --input students_input.csv --output students.csv && python teachers_cleanup.py --input teachers_input.csv --output teachers.csv && python main.py --students students.csv --teachers teachers.csv
    ```
 
 ## Troubleshooting
