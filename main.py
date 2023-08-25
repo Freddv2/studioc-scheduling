@@ -6,7 +6,7 @@ from datetime import timedelta, datetime
 import colorama
 import pandas as pd
 
-from formatter import print_schedules, output_to_csv
+from formatter import print_schedules, output_to_csv, print_teacher_schedule
 
 best_schedule = {}
 best_processed_students = {}
@@ -404,10 +404,8 @@ if __name__ == '__main__':
         print(f' {iteration} iteration ran. Best Scheduling match is {best_students_assignment_percentage} %')
         if (datetime.now() - script_start_time).seconds >= duration:
             schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
+            print_schedules(schedule)
             print(f'Student matched at {best_students_assignment_percentage}%.')
             print(f'Teachers matched at {best_teachers_assignment_percentage}%.')
-            print(f'Processed students {best_processed_students}')
             break
-
-    print_schedules(schedule)
     output_to_csv(best_processed_students)
