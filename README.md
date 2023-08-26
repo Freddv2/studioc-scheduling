@@ -4,7 +4,7 @@
 1. **Python**: Make sure Python is installed on your system. You can download it from the [official Python website](https://www.python.org/downloads/).
 2. **Libraries**: The scripts require certain Python libraries like Pandas. You can install them using the following command in the terminal or command prompt:
    ```bash
-   pip install pandas colorama
+   pip install pandas colorama pyfiglet
    ```
 
 ## How to Use

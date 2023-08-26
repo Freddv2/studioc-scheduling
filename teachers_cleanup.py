@@ -17,6 +17,7 @@ def main(input_file, output_file):
         "Début Pause 2": "start_break_2",
         "Fin Pause 2": "end_break_2",
         "Durée Pause 2": "length_break_2",
+        "Accepte Nouveaux Élèves?": "accept_new_student"
 
     }
 
@@ -30,6 +31,8 @@ def main(input_file, output_file):
 
     # Rename the columns based on the mapping.
     df.rename(columns=column_mapping, inplace=True)
+
+    df['accept_new_student'] = df['accept_new_student'].apply(lambda x: True if x == 'Oui' else False)
 
     # Trim spaces and convert to lowercase for the rest of the columns.
     for col in df.columns:

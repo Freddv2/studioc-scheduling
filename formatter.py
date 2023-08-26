@@ -72,3 +72,36 @@ def output_to_csv(students):
         writer.writeheader()
         # Write the rows
         writer.writerows(students)
+
+
+def print_stats(processed_students, teacher_schedules):
+    nb_of_assigned_students = sum(1 for student in processed_students if student['Assigné'] is True)
+    percent_of_assigned_students = round((nb_of_assigned_students / len(processed_students)) * 100, 1)
+
+    nb_of_students_assigned_to_preferred_teacher = sum(1 for student in processed_students if student["Assigné à l'enseignant demandé"] is True)
+    nb_of_students_asked_for_preferred_teacher = sum(1 for student in processed_students if student['Enseignant demandé'])
+    percent_of_assigned_students_with_preferred_teacher = round((nb_of_students_assigned_to_preferred_teacher / nb_of_students_asked_for_preferred_teacher) * 100, 1)
+
+    nb_of_assigned_students_with_ideal_timeslot = sum(1 for student in processed_students if student['Plage horaire idéale'] is True)
+    percent_of_assigned_students_with_ideal_timeslot = round((nb_of_assigned_students_with_ideal_timeslot / len(processed_students)) * 100, 1)
+
+    teachers_assignment_percentage = calculate_teachers_assignment_percentage(teacher_schedules)
+
+    print(f'Preferred Teacher matched at {percent_of_assigned_students_with_preferred_teacher}%.')
+    print(f'Preferred Time Slot matched at {percent_of_assigned_students_with_ideal_timeslot}%.')
+    print(f'Student matched at {percent_of_assigned_students}%.')
+    print(f'Teachers matched at {teachers_assignment_percentage}%.')
+
+
+def calculate_teachers_assignment_percentage(teachers_schedule):
+    total_percentage = 0
+    total_teachers = len(teachers_schedule)
+
+    for teacher, schedule in teachers_schedule.items():
+        total_timeslots = len(schedule)
+        timeslots_with_students = sum(1 for student_name in schedule.values() if student_name is not None)
+        teacher_percentage = (timeslots_with_students / total_timeslots) * 100
+        total_percentage += teacher_percentage
+
+    teachers_assignment_percentage = round(total_percentage / total_teachers, 1)
+    return teachers_assignment_percentage

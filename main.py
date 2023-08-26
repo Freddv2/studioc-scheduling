@@ -5,13 +5,12 @@ from datetime import timedelta, datetime
 
 import colorama
 import pandas as pd
-
-from formatter import print_schedules, output_to_csv, print_teacher_schedule
+from pyfiglet import Figlet
+from formatter import print_schedules, output_to_csv, print_stats
 
 best_schedule = {}
 best_processed_students = {}
 best_students_assignment_percentage = 0
-best_teachers_assignment_percentage = 0
 
 
 def assign_students():
@@ -54,23 +53,25 @@ def need_to_force_student_assignment(student):
             and not pd.isna(student['assigned_start_time']) and not pd.isna(student['assigned_duration']))
 
 
-def possible_teachers(student, teachers):
-    # Create a temporary list of teachers teaching the same instrument
-    teachers_that_teach_instrument = [teacher for _, teacher in teachers.iterrows() if student['instrument'] in map(str.strip, teacher['instrument'].split(","))]
+def possible_teachers(student, all_teachers):
+    # Create a temporary list of teachers teaching the same instrument. Also checking if the teacher accept new student. If not it will not teach
+    # to a student that has not asked for him
+    potential_teachers = [teacher for _, teacher in all_teachers.iterrows() if student['instrument'] in map(str.strip, teacher['instrument'].split(","))
+                          and (teacher["accept_new_student"] or teacher["teacher_name"] == student['preferred_teacher'])]
 
     # Sort the list so that preferred teachers come first
-    teachers_that_teach_instrument.sort(key=lambda teacher: not student['preferred_teacher'] == teacher['teacher_name'])
-    return teachers_that_teach_instrument
+    potential_teachers.sort(key=lambda teacher: not student['preferred_teacher'] == teacher['teacher_name'])
+    return potential_teachers
 
 
-def sort_students(students):
+def sort_students(students_to_sort):
     # Order of instruments priority
     instrument_order = ["violon", "piano", "chant", "guitare", "ukulélé", "batterie / percussion"]
 
     def instrument_idx(instrument):
         return instrument_order.index(instrument) if instrument in instrument_order else len(instrument_order)
 
-    return students.sort_values(
+    return students_to_sort.sort_values(
         by=['assigned_teacher', 'simultaneous_family_class', 'current_student', 'instrument'],
         ascending=[False, False, False, True],
         key=lambda col: col.map(instrument_idx) if col.name == 'instrument' else col)
@@ -130,14 +131,13 @@ def process_sibling_different_instruments(student, sibling, teachers_schedule, p
                         sibling_teacher_schedule = teachers_schedule[sibling_teacher['teacher_name']]
                         if is_slot_available(student_teacher_schedule, day, student_lesson_periods) and is_slot_available(sibling_teacher_schedule, day, sibling_lesson_periods):
                             if (teacher_can_still_take_breaks(student_teacher_schedule, student_teacher, student_lesson_periods, student)
-                                    and teacher_can_still_take_breaks(sibling_teacher_schedule, sibling_teacher,student_lesson_periods,sibling)):
+                                    and teacher_can_still_take_breaks(sibling_teacher_schedule, sibling_teacher, student_lesson_periods, sibling)):
                                 assign_student_to_slot(student_teacher_schedule, day, student_lesson_periods, student, student_teacher['teacher_name'])
                                 add_to_process_students(processed_students, student, True, student_teacher['teacher_name'], day, student_lesson_periods[0].strftime("%H:%M"), student_teacher['location'], True)
 
                                 assign_student_to_slot(sibling_teacher_schedule, day, sibling_lesson_periods, sibling, sibling_teacher['teacher_name'])
                                 add_to_process_students(processed_students, sibling, True, sibling_teacher['teacher_name'], day, sibling_lesson_periods[0].strftime("%H:%M"), sibling_teacher['location'], True)
 
-                                print(f'Siblings {student["student_name"]} & {sibling["student_name"]} were match at the same time')
                                 return True
     return False
 
@@ -155,7 +155,6 @@ def assign_siblings_one_after_another(teacher_schedule, teacher, student, siblin
 
                     assign_student_to_slot(teacher_schedule, day, sibling_lesson_periods, sibling, teacher['teacher_name'])
                     add_to_process_students(processed_students, sibling, True, teacher['teacher_name'], day, sibling_lesson_periods[0].strftime("%H:%M"), teacher['location'], True)
-                    print(f'Siblings: {student["student_name"]} & {sibling["student_name"]} were assigned one after the other')
                 return True
     return False
 
@@ -164,9 +163,9 @@ def student_and_teacher_are_at_same_location(student, teacher):
     return student['location'] == teacher['location'] or student['can_be_realocated']
 
 
-def assign_sibling_at_the_same_time(teachers_schedule, student_schedule, lesson_duration_in_quarter_hours, student, sibling, teachers):
-    possible_teachers_student = possible_teachers(student, teachers)
-    possible_teachers_sibling = possible_teachers(sibling, teachers)
+def assign_sibling_at_the_same_time(teachers_schedule, student_schedule, lesson_duration_in_quarter_hours, student, sibling, all_teachers):
+    possible_teachers_student = possible_teachers(student, all_teachers)
+    possible_teachers_sibling = possible_teachers(sibling, all_teachers)
 
     for day, timeslots in student_schedule.items():
         for timeslot in timeslots:
@@ -193,11 +192,11 @@ def assign_sibling_at_the_same_time(teachers_schedule, student_schedule, lesson_
 
 
 def create_student_availability_schedule(student):
-    schedule = {student['ideal_day']: create_time_slots_until_end_time(student['ideal_start_time'], student['ideal_end_time'])}
-    add_to_schedule(schedule, student['alternative_day_1'], student['alternative_start_time_1'], student['alternative_end_time_1'])
-    add_to_schedule(schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
-    add_to_schedule(schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
-    return schedule
+    new_schedule = {student['ideal_day']: create_time_slots_until_end_time(student['ideal_start_time'], student['ideal_end_time'])}
+    add_to_schedule(new_schedule, student['alternative_day_1'], student['alternative_start_time_1'], student['alternative_end_time_1'])
+    add_to_schedule(new_schedule, student['alternative_day_2'], student['alternative_start_time_2'], student['alternative_end_time_2'])
+    add_to_schedule(new_schedule, student['alternative_day_3'], student['alternative_start_time_3'], student['alternative_end_time_3'])
+    return new_schedule
 
 
 def add_to_process_students(processed_students, student, assigned, teacher_name, day, start_time, location, assigned_with_siblings):
@@ -215,20 +214,18 @@ def add_to_process_students(processed_students, student, assigned, teacher_name,
          'Durée': student['lesson_duration'],
          'Lieu': location,
          'Assigné': assigned,
-         'Enseignant demandé': student['preferred_teacher'] == teacher_name,
+         "Assigné à l'enseignant demandé": student['preferred_teacher'] == teacher_name,
+         "Enseignant demandé": student['preferred_teacher'],
          'Plage horaire idéale': ideal_timeslot,
          'Fratrie': student['simultaneous_family_class'],
          'Assigné en même temps que la fraterie': assigned_with_siblings,
-         'Numéro Téléphone': student['phone_number'],
+         'Numéro de téléphone': student['phone_number'],
          'Email': student['email']})
 
 
 def update_best_iteration(teachers_schedule, processed_students):
     nb_of_assigned_students = sum(1 for student in processed_students if student['Assigné'] is True)
     percent_of_assigned_students = round((nb_of_assigned_students / len(processed_students)) * 100, 1)
-
-    teachers_assignment_percentage = calculate_teachers_assignment_percentage(teachers_schedule)
-
     global best_students_assignment_percentage
     if percent_of_assigned_students > best_students_assignment_percentage:
         best_students_assignment_percentage = percent_of_assigned_students
@@ -236,22 +233,6 @@ def update_best_iteration(teachers_schedule, processed_students):
         best_schedule = teachers_schedule
         global best_processed_students
         best_processed_students = processed_students
-        global best_teachers_assignment_percentage
-        best_teachers_assignment_percentage = teachers_assignment_percentage
-
-
-def calculate_teachers_assignment_percentage(teachers_schedule):
-    total_percentage = 0
-    total_teachers = len(teachers_schedule)
-
-    for teacher, schedule in teachers_schedule.items():
-        total_timeslots = len(schedule)
-        timeslots_with_students = sum(1 for student_name in schedule.values() if student_name is not None)
-        teacher_percentage = (timeslots_with_students / total_timeslots) * 100
-        total_percentage += teacher_percentage
-
-    teachers_assignment_percentage = round(total_percentage / total_teachers, 1)
-    return teachers_assignment_percentage
 
 
 def time_plus(time, minutes):
@@ -263,16 +244,16 @@ def time_plus(time, minutes):
     return end.time()
 
 
-def create_schedule(teachers):
-    schedule = {}
-    for _, teacher in teachers.iterrows():
-        schedule.setdefault(teacher['teacher_name'], {})
+def create_schedule(all_teachers):
+    teacher_schedule = {}
+    for _, teacher in all_teachers.iterrows():
+        teacher_schedule.setdefault(teacher['teacher_name'], {})
         time = datetime.strptime(teacher['start_time'], '%H:%M').time()
         end_time = datetime.strptime(teacher['end_time'], '%H:%M').time()
         while time < end_time:
-            schedule[teacher['teacher_name']][(teacher['day'], time)] = None
+            teacher_schedule[teacher['teacher_name']][(teacher['day'], time)] = None
             time = time_plus(time, timedelta(minutes=15))
-    return schedule
+    return teacher_schedule
 
 
 def create_time_slots_until_end_time(start_time, end_time):
@@ -285,10 +266,10 @@ def create_time_slots_until_end_time(start_time, end_time):
     return time_slots
 
 
-def create_time_slot_for_duration(start_time, duration):
+def create_time_slot_for_duration(start_time, length):
     time_slots = []
     current_time = round_to_latest_15_minutes(datetime.strptime(start_time, '%H:%M'))
-    nb_of_periods = int(duration) // 15
+    nb_of_periods = int(length) // 15
     i = 1
     while i <= nb_of_periods:
         time_slots.append(current_time.time())
@@ -334,20 +315,20 @@ def round_to_latest_15_minutes(dt):
     return datetime.min + math.ceil((dt - datetime.min) / closest) * closest
 
 
-def add_to_schedule(schedule, day, start_time, end_time):
+def add_to_schedule(student_schedule, day, start_time, end_time):
     if day and not pd.isna(start_time) and not pd.isna(end_time):
         time_slots = create_time_slots_until_end_time(start_time, end_time)
         # If the day is not already in the schedule, add it with the time slot as the only item in the list
-        if day not in schedule:
-            schedule[day] = time_slots
+        if day not in student_schedule:
+            student_schedule[day] = time_slots
             return
 
         # If the time slot is already in the list, do nothing
         for time_slot in time_slots:
-            if time_slot in schedule[day]:
+            if time_slot in student_schedule[day]:
                 continue
             else:
-                bisect.insort(schedule[day], time_slot)
+                bisect.insort(student_schedule[day], time_slot)
 
 
 def is_during_break(time, start_break, end_break):
@@ -382,30 +363,21 @@ def teacher_can_still_take_break(teacher_schedule, day, start, end, duration_in_
 
 if __name__ == '__main__':
     colorama.init()
+    f = Figlet(font='banner3-D')
+    print(f"\n\n{f.renderText('Studio C')}")
 
     parser = argparse.ArgumentParser(description='Studio C scheduling tool')
     parser.add_argument('-s', '--students_file', required=True, help='Path to the students CSV file')
     parser.add_argument('-t', '--teachers_file', required=True, help='Path to the teachers CSV file')
-    # parser.add_argument('-d', '--duration', type=int, required=True, help='Max scheduling duration in seconds')
+    parser.add_argument('-d', '--duration', type=int, required=False, help='Max scheduling duration in seconds')
 
     args = parser.parse_args()
 
     students = pd.read_csv(args.students_file)
     teachers = pd.read_csv(args.teachers_file)
-    duration = 0
-    script_start_time = datetime.now()
-    iteration = 0
-    schedule = {}
 
-    while best_students_assignment_percentage < 100:
-        # shuffled_students = students.sample(frac=1).reset_index(drop=True)
-        assign_students()
-        iteration += 1
-        print(f' {iteration} iteration ran. Best Scheduling match is {best_students_assignment_percentage} %')
-        if (datetime.now() - script_start_time).seconds >= duration:
-            schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
-            print_schedules(schedule)
-            print(f'Student matched at {best_students_assignment_percentage}%.')
-            print(f'Teachers matched at {best_teachers_assignment_percentage}%.')
-            break
+    assign_students()
+    schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
+    print_schedules(schedule)
+    print_stats(best_processed_students, best_schedule)
     output_to_csv(best_processed_students)
