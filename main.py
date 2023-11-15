@@ -12,8 +12,7 @@ best_schedule = {}
 best_processed_students = {}
 best_students_assignment_percentage = 0
 
-
-def assign_students():
+def assign_students(students, teachers):
     teachers_schedule = create_schedule(teachers)
     prioritized_students = sort_students(students)
     processed_students = []
@@ -37,9 +36,10 @@ def assign_students():
                 if process_sibling_students(student, sibling_row.iloc[0], teachers_schedule, processed_students):
                     continue
 
-        process_single_student(student, teachers_schedule, processed_students)
+        process_single_student(student, teachers_schedule, processed_students,teachers)
 
     update_best_iteration(teachers_schedule, processed_students)
+    return teachers_schedule
 
 
 def force_student_assignment(student, teachers_schedule, processed_students):
@@ -82,7 +82,7 @@ def is_student_processed(processed_students, student):
     return any(p_student['Nom Étudiant'] == student['student_name'] for p_student in processed_students)
 
 
-def process_single_student(student, teachers_schedule, processed_students):
+def process_single_student(student, teachers_schedule, processed_students,teachers):
     for teacher in possible_teachers(student, teachers):
         teacher_schedule = teachers_schedule[teacher['teacher_name']]
         if student_and_teacher_are_at_same_location(student, teacher):
@@ -94,12 +94,12 @@ def process_single_student(student, teachers_schedule, processed_students):
 
 def process_sibling_students(student, sibling, teachers_schedule, processed_students):
     if sibling['instrument'] == student['instrument']:
-        return process_sibling_same_instrument(student, sibling, teachers_schedule, processed_students)
+        return process_sibling_same_instrument(student, sibling, teachers_schedule, processed_students,teachers)
     else:
-        return process_sibling_different_instruments(student, sibling, teachers_schedule, processed_students)
+        return process_sibling_different_instruments(student, sibling, teachers_schedule, processed_students,teachers)
 
 
-def process_sibling_same_instrument(student, sibling, teachers_schedule, processed_students):
+def process_sibling_same_instrument(student, sibling, teachers_schedule, processed_students,teachers):
     for teacher in possible_teachers(student, teachers):
         if student_and_teacher_are_at_same_location(student, teacher):
             teacher_schedule = teachers_schedule[teacher['teacher_name']]
@@ -108,7 +108,7 @@ def process_sibling_same_instrument(student, sibling, teachers_schedule, process
     return False
 
 
-def process_sibling_different_instruments(student, sibling, teachers_schedule, processed_students):
+def process_sibling_different_instruments(student, sibling, teachers_schedule, processed_students,teachers):
     for day, timeslots in create_student_availability_schedule(student).items():
         for timeslot in timeslots:
             student_lesson_periods = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in range(int(student['lesson_duration']) // 15)]
@@ -376,7 +376,7 @@ if __name__ == '__main__':
     students = pd.read_csv(args.students_file)
     teachers = pd.read_csv(args.teachers_file)
 
-    assign_students()
+    assign_students(students,teachers)
     schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for teacher, timeslots in best_schedule.items()}
     print_schedules(schedule)
     print_stats(best_processed_students, best_schedule)
