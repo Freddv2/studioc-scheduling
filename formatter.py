@@ -5,8 +5,12 @@ from datetime import timedelta, datetime
 
 def print_schedules(schedules):
     with open('schedules_visual.txt', 'w', encoding='utf-8') as file:
+        print("#\033[92m Vert: Assigné au lieu et au professeur demandé\033[0m")
+        print("#\033[96m Turquoise: Assigné au professeur mais pas au lieu\033[0m")
+        print("#\033[93m Jaune: Assigné au lieu mais pas au professeur\033[0m")
+        print("#\033[91m Rouge: Assigné ni au professeur ni au lieu demandé\033[0m")
         for teacher, schedule in schedules.items():
-            teacher_schedule_title = f"\n{teacher}'s Schedule:"
+            teacher_schedule_title = f"\n Horaire de {teacher}:"
             print(teacher_schedule_title)
             schedule_output = print_teacher_schedule(schedule)
             print(schedule_output)  # Print to console
@@ -15,10 +19,20 @@ def print_schedules(schedules):
 
 
 def print_teacher_schedule(schedule):
-    availability_schedule = {
-        (day, time): (student['Name'], student['preferred_teacher']) if student is not None else ("(Available)", None)
-        for (day, time), student in schedule.items()
-    }
+    availability_schedule = {}
+    daily_instruments = {}
+    daily_locations = {}
+
+    for (day, time), entry in schedule.items():
+        # Update availability_schedule
+        if entry is not None:
+            availability_schedule[(day, time)] = (entry['Name'], entry['preferred_teacher'], entry['preferred_location'])
+            # Update daily_instruments and daily_locations
+            if day not in daily_instruments or day not in daily_locations:
+                daily_instruments[day] = entry['instrument']
+                daily_locations[day] = entry['location']
+        else:
+            availability_schedule[(day, time)] = ("(Disponible)", None, None)
 
     # Determine the start and end times
     times = [time for day, time in schedule.keys()]
@@ -32,36 +46,52 @@ def print_teacher_schedule(schedule):
         timeslots.append(current_time.strftime("%H:%M"))
         current_time += timedelta(minutes=15)
 
-    # Filter days where the teacher is teaching
-    teaching_days = [day for day in ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
-                     if any(day.lower() in key for key in availability_schedule.keys())]
+    # Prepare the day headers with instrument and location
+    teaching_days_header = []
+    for day in ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]:
+        if day in daily_instruments:
+            instrument = daily_instruments[day]
+            location = daily_locations.get(day, "")
+            teaching_days_header.append(f"{day.capitalize()} - {instrument}, {location}")
 
     # Determine the column width based on the longest student name across the entire schedule
     column_width = max(len(str(value[0])) for value in availability_schedule.values())
-    column_width = max(column_width, max(len(day) for day in teaching_days))  # Make sure the width is not smaller than day names
+    column_width = max(column_width, max(len(day) for day in teaching_days_header))  # Make sure the width is not smaller than day names
 
     output = []
     # Print header
-    header = "Time   | " + " | ".join(day.ljust(column_width) for day in teaching_days)
+    header = "Heure  | " + " | ".join(day.ljust(column_width) for day in teaching_days_header)
     output.append(header)
-    output.append("-" * (9 + 4 * len(teaching_days) + column_width * len(teaching_days)))
+    output.append("-" * (9 + 4 * len(teaching_days_header) + column_width * len(teaching_days_header)))
 
     # Print schedule
     for time in timeslots:
         row = []
-        for day in teaching_days:
-            cell, preferred_teacher = availability_schedule.get((day.lower(), time), (" " * column_width, None))
-            cell = cell.center(column_width)  # Center the text within the column
-            color_code = "\033[0m"  # Default no color
-            if preferred_teacher is not None:
-                color_code = "\033[92m" if preferred_teacher else "\033[93m"
-            elif cell.strip() == "(Available)":
-                color_code = "\033[91m"
+        for day_header in teaching_days_header:
+            day = day_header.split(' - ')[0].lower()
+            cell, preferred_teacher, preferred_location = availability_schedule.get((day.lower(), time), (" " * column_width, None, None))
+            cell = cell.center(column_width)
+            color_code = determine_cell_color(preferred_teacher, preferred_location)
             formatted_cell = f"{color_code}{cell}\033[0m"
             row.append(formatted_cell)
         output.append(f"{time} | " + " | ".join(row))
 
     return "\n".join(output)
+
+
+def determine_cell_color(preferred_teacher, preferred_location):
+    color_code = "\033[0m"  # Default no color
+    if preferred_teacher is None and preferred_location is None:
+        return color_code
+    elif preferred_teacher and preferred_location:
+        color_code = "\033[92m"  # Green
+    elif preferred_teacher and not preferred_location:
+        color_code = "\033[96m" # Cyan
+    elif not preferred_teacher and preferred_location:
+        color_code = "\033[93m"  # Yellow
+    elif not preferred_teacher and not preferred_location:
+        color_code = "\033[91m"
+    return color_code
 
 
 def output_to_csv(students):
@@ -87,7 +117,7 @@ def print_stats(processed_students, teacher_schedules):
 
     teachers_assignment_percentage = calculate_teachers_assignment_percentage(teacher_schedules)
 
-    print(f'Preferred Teacher matched at {percent_of_assigned_students_with_preferred_teacher}%.')
+    print(f'\nPreferred Teacher matched at {percent_of_assigned_students_with_preferred_teacher}%.')
     print(f'Preferred Time Slot matched at {percent_of_assigned_students_with_ideal_timeslot}%.')
     print(f'Student matched at {percent_of_assigned_students}%.')
     print(f'Teachers matched at {teachers_assignment_percentage}%.')
