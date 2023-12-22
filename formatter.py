@@ -5,10 +5,10 @@ from datetime import timedelta, datetime
 
 def print_schedules(schedules):
     with open('schedules_visual.txt', 'w', encoding='utf-8') as file:
-        print("#\033[92m Vert: Assigné au lieu et au professeur demandé\033[0m")
-        print("#\033[96m Turquoise: Assigné au professeur mais pas au lieu\033[0m")
-        print("#\033[93m Jaune: Assigné au lieu mais pas au professeur\033[0m")
-        print("#\033[91m Rouge: Assigné ni au professeur ni au lieu demandé\033[0m")
+        print("\033[92m# Assigné au lieu et au professeur demandé\033[0m")
+        print("\033[96m# Assigné au professeur mais pas au lieu\033[0m")
+        print("\033[93m# Assigné au lieu mais pas au professeur\033[0m")
+        print("\033[91m# Assigné ni au professeur ni au lieu demandé\033[0m")
         for teacher, schedule in schedules.items():
             teacher_schedule_title = f"\n Horaire de {teacher}:"
             print(teacher_schedule_title)
