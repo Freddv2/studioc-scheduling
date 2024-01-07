@@ -7,11 +7,11 @@ def main(input_file, output_file):
     column_mapping = {
         "Courriel": "email",
         "Numéro(s) de Téléphone Cellulaire": "phone_number",
-        "Prénom ET Nom de famille de l'élève": "student_name",
-        "Je souhaite m'inscrire à la session Automne 2023": "want_lesson",
+        "Prénom ET Nom de famille de l'élève (S'il vous plait vérifier l'orthographe attentivement)": "student_name",
+        "Je souhaite m'inscrire à la session Hiver 2024": "want_lesson",
         "Suivez-vous actuellement des cours avec nous?": "current_student",
         "Je désire faire une inscription aux cours de :": "instrument",
-        "Durée des cours (Pour les nouveaux élèves de 10 ans et moins, nous suggérons fortement de débuter avec des cours de 30 minutes) ": "lesson_duration",
+        "Durée des cours \r\n(Pour les nouveaux élèves de 10 ans et moins, nous suggérons fortement de débuter avec des cours de 30 minutes) ": "lesson_duration",
         "Si vous êtes un élève actuel, qui est votre enseignant? ": "preferred_teacher",
         "À quelle école aimeriez-vous suivre vos cours?": "location",
         "Est-il possible pour vous de vous déplacer à l'autre école si nous n'avons aucune place à votre premier choix?": "can_be_realocated",
@@ -31,10 +31,10 @@ def main(input_file, output_file):
         "Souhaitez vous prendre un cours en même temps qu'un autre membre de la famille?  Prendre note que vous devrez tout de même remplir l'inscription pour l'autre élève.": "simultaneous_family_class",
         "Si oui, veuillez écrire le prénom ET nom de famille de l'autre élève. Prendre note que vous devrez remplir l'inscription pour l'autre élève. Nous ne pouvons pas garantir que nous serons en mesure de placer les membres d'une même famille à la même plage horaire.": "sibling_name",
         "Si vous avez une suggestion ou un commentaire, n'hésitez pas à nous en faire part!": "comment",
-        "Assigned_Teacher": "assigned_teacher",
-        "Assigned_Day": "assigned_day",
-        "Assigned_Start_Time": "assigned_start_time",
-        "Assigned_Duration": "assigned_duration",
+        "assigned_teacher": "assigned_teacher",
+        "assigned_day": "assigned_day",
+        "assigned_start_time": "assigned_start_time",
+        "assigned_duration": "assigned_duration",
         "Âge de l'élève (requis pour les enfants seulement)": "age",
     }
 
@@ -58,14 +58,6 @@ def main(input_file, output_file):
     df['alternative_day_2'] = df['alternative_day_2'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
     df['alternative_day_3'] = df['alternative_day_3'].apply(lambda x: '' if x == "Non, pas d'autres possibilités" else x)
     df['simultaneous_family_class'] = df['simultaneous_family_class'].apply(lambda x: True if x == 'Oui' else False)
-    df['ideal_start_time'] = df['ideal_start_time'].str.slice(0, -3)
-    df['ideal_end_time'] = df['ideal_end_time'].str.slice(0, -3)
-    df['alternative_start_time_1'] = df['alternative_start_time_1'].str.slice(0, -3)
-    df['alternative_end_time_1'] = df['alternative_end_time_1'].str.slice(0, -3)
-    df['alternative_start_time_2'] = df['alternative_start_time_2'].str.slice(0, -3)
-    df['alternative_end_time_2'] = df['alternative_end_time_2'].str.slice(0, -3)
-    df['alternative_start_time_3'] = df['alternative_start_time_3'].str.slice(0, -3)
-    df['alternative_end_time_3'] = df['alternative_end_time_3'].str.slice(0, -3)
     df['assigned_teacher'] = df['assigned_teacher'].apply(lambda teacher_name: '' if pd.isna(teacher_name) else clean_preferred_teacher_name(teacher_name))
     df['assigned_duration'] = df['assigned_duration'].apply(lambda x: 60 if x == '60 Minutes' else (45 if x == '45 Minutes' else 30))
     # Trim spaces and convert to lowercase for the rest of the columns.

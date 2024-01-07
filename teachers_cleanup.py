@@ -3,35 +3,11 @@ import argparse
 
 
 def main(input_file, output_file):
-    # Mapping of old column names to new ones.
-    column_mapping = {
-        "Enseignant(e)": "teacher_name",
-        "Instrument": "instrument",
-        "Journée": "day",
-        "Location": "location",
-        "Heure début": "start_time",
-        "Heure Fin": "end_time",
-        "Début Pause 1": "start_break_1",
-        "Fin Pause 1": "end_break_1",
-        "Durée Pause 1": "length_break_1",
-        "Début Pause 2": "start_break_2",
-        "Fin Pause 2": "end_break_2",
-        "Durée Pause 2": "length_break_2",
-        "Accepte Nouveaux Élèves?": "accept_new_student"
-
-    }
 
     # Read the CSV file.
     df = pd.read_csv(input_file)
     # Trim whitespace from the column names
     df.columns = df.columns.str.strip()
-
-    # Select the columns from the dataframe based on the keys in column_mapping.
-    df = df[list(column_mapping.keys())]
-
-    # Rename the columns based on the mapping.
-    df.rename(columns=column_mapping, inplace=True)
-
     df['accept_new_student'] = df['accept_new_student'].apply(lambda x: True if x == 'Oui' else False)
 
     # Trim spaces and convert to lowercase for the rest of the columns.

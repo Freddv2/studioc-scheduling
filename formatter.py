@@ -10,11 +10,11 @@ def print_schedules(schedules):
         print("\033[93m# Assigné au lieu mais pas au professeur\033[0m")
         print("\033[91m# Assigné ni au professeur ni au lieu demandé\033[0m")
         for teacher, schedule in schedules.items():
-            teacher_schedule_title = f"\n Horaire de {teacher}:"
+            teacher_schedule_title = f"\nHoraire de {teacher}:"
             print(teacher_schedule_title)
             schedule_output = print_teacher_schedule(schedule)
             print(schedule_output)  # Print to console
-            file.write("\n" + teacher_schedule_title + "àn\n")
+            file.write("\n" + teacher_schedule_title + "\n")
             file.write(re.sub(r'\033\[\d+m', '', schedule_output))  # Write to file without color codes
 
 
@@ -54,6 +54,11 @@ def print_teacher_schedule(schedule):
             location = daily_locations.get(day, "")
             teaching_days_header.append(f"{day.capitalize()} - {instrument}, {location}")
 
+    # Handle the case where the teacher is not teaching
+    if not teaching_days_header:
+        for day in {day for day, time in schedule.keys()}:
+            teaching_days_header.append(f"{day.capitalize()}")
+
     # Determine the column width based on the longest student name across the entire schedule
     column_width = max(len(str(value[0])) for value in availability_schedule.values())
     column_width = max(column_width, max(len(day) for day in teaching_days_header))  # Make sure the width is not smaller than day names
@@ -86,7 +91,7 @@ def determine_cell_color(preferred_teacher, preferred_location):
     elif preferred_teacher and preferred_location:
         color_code = "\033[92m"  # Green
     elif preferred_teacher and not preferred_location:
-        color_code = "\033[96m" # Cyan
+        color_code = "\033[96m"  # Cyan
     elif not preferred_teacher and preferred_location:
         color_code = "\033[93m"  # Yellow
     elif not preferred_teacher and not preferred_location:
