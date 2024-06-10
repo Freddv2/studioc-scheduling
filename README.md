@@ -18,7 +18,7 @@
    Replace `path/to/your/folder` with the actual path to the folder containing the scripts.
 5. **Run the Command**: Copy and paste the following command into the terminal, replacing the filenames with your actual file names:
    ```bash
-   python students_cleanup.py --input students_input.csv --output students.csv && python teachers_cleanup.py --input teachers_input.csv --output teachers.csv && python main.py --students students.csv --teachers teachers.csv
+   python students_cleanup.py --input students_input.csv --output students.csv && python teachers_cleanup.py --input teachers_input.csv --output teachers.csv && python main.py --students_file students.csv --teachers_file teachers.csv
    ```
 
 ## Troubleshooting

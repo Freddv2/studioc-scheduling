@@ -1,4 +1,4 @@
-from main import assign_students
+from main import assign_students, run
 import pandas as pd
 
 
@@ -7,12 +7,12 @@ def test_siblings_scheduled_consecutively():
     students_data = {
         'student_name': ['Alice', 'Bob'],
         'instrument': ['piano', 'piano'],
-        'location': ['School', 'School'],
-        'current_student': [False, False],
-        'lesson_duration': ['30', '30'],
-        'ideal_day': ['Monday', 'Monday'],
-        'ideal_start_time': ['15:00', '15:00'],
-        'ideal_end_time': ['17:00', '17:00'],
+        'location': ['patate', 'School'],
+        'current_student': [True, False],
+        'lesson_duration': ['45', '60'],
+        'ideal_day': ['lundi', 'lundi'],
+        'ideal_start_time': ['15:00', '15:15'],
+        'ideal_end_time': ['17:00', '15:45'],
         'alternative_day_1': ['', ''],
         'alternative_start_time_1': ['', ''],
         'alternative_end_time_1': ['', ''],
@@ -33,18 +33,18 @@ def test_siblings_scheduled_consecutively():
         'assigned_day': [pd.NA, pd.NA],
         'assigned_start_time': [pd.NA, pd.NA],
         'assigned_duration': [pd.NA, pd.NA],
-        'preferred_teacher': ['', ''],
+        'preferred_teacher': ['Mr. Smith', 'Mr. Smith'],
     }
 
     teachers_data = {
         'teacher_name': ['Mr. Smith'],
-        'instrument': ['piano'],
+        'instrument': ['piano, chant'],
         'location': ['School'],
-        'day': ['Monday'],
+        'day': ['lundi'],
         'start_time': ['14:00'],
         'end_time': ['18:00'],
-        'start_break_1': ['16:00'],
-        'end_break_1': ['16:15'],
+        'start_break_1': [pd.NA],
+        'end_break_1': [pd.NA],
         'length_break_1': [15],
         'accept_new_student': [True],
         'start_break_2': [pd.NA],
@@ -52,13 +52,7 @@ def test_siblings_scheduled_consecutively():
         'length_break_2': [pd.NA],
     }
 
-    # Convert mock data to DataFrame
     students = pd.DataFrame(students_data)
     teachers = pd.DataFrame(teachers_data)
 
-    # Call the scheduling function
-    teachers_schedule = assign_students(students, teachers)  # you might need to adjust this call
-
-    # Check if siblings are scheduled one after another
-    # This is just an example, you need to adjust it based on your actual data structure
-    print(teachers_schedule)
+    run(students,teachers)

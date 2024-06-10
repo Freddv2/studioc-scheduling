@@ -47,8 +47,9 @@ def print_teacher_schedule(schedule):
         current_time += timedelta(minutes=15)
 
     # Prepare the day headers with instrument and location
+    days_of_the_week = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
     teaching_days_header = []
-    for day in ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]:
+    for day in days_of_the_week:
         if day in daily_instruments:
             instrument = daily_instruments[day]
             location = daily_locations.get(day, "")
@@ -56,8 +57,9 @@ def print_teacher_schedule(schedule):
 
     # Handle the case where the teacher is not teaching
     if not teaching_days_header:
-        for day in {day for day, time in schedule.keys()}:
-            teaching_days_header.append(f"{day.capitalize()}")
+        for day in days_of_the_week:
+            if any(d == day for d, _ in schedule.keys()):
+                teaching_days_header.append(f"{day.capitalize()}")
 
     # Determine the column width based on the longest student name across the entire schedule
     column_width = max(len(str(value[0])) for value in availability_schedule.values())

@@ -1,35 +1,22 @@
-﻿teacher_name,instrument,day,location,start_time,end_time,start_break_1,end_break_1,length_break_1,start_break_2,end_break_2,length_break_2,accept_new_student,,,,,,,,,,,,,,,,
-Shin-jung L.,"Violon, Piano",Vendredi,Lorraine,13:00,21:00,15:00,16:00,30,18:00,19:30,30,Oui,,,,,,,,,,,,,,,,
-Shawn-Michael B. ,"Guitare, Ukulélé, Saxophone",Vendredi,Rosemère,16:30,21:00,,,,,,,Oui,,,,,,,,,,,,,,,,
-Vinie M.,"Chant, Piano",Vendredi,Rosemère,12:00,20:00,15:00,18:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Mathilde C.,"Chant, Piano",Samedi ,Rosemère,09:00,17:00,12:00,13:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Justine L. ,Chant,Samedi ,Rosemère,10:00,15:30,12:00,13:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Shawn-Michael B. ,"Guitare, Ukulélé, Saxophone",Samedi ,Rosemère,09:30,17:00,11:30,13:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Tanya T. ,Piano,Samedi ,Rosemère,08:00,13:00,,,,,,,Oui,,,,,,,,,,,,,,,,
-Antoine B.,Piano,Samedi ,Lorraine,11:00,18:00,,,,,,,Non,,,,,,,,,,,,,,,,
-Vinie M.,"Chant, Piano",Samedi ,Lorraine,09:00,14:00,11:30,13:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Claudia T.,Chant,Mercredi ,Rosemère,16:15,21:00,17:30,18:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Tanya T. ,Piano,Mercredi,Rosemère,15:00,21:00,17:00,19:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Vincent C. ,Guitare,Mercredi,Lorraine,15:00,21:00,,,,,,,Non,,,,,,,,,,,,,,,,
-Mathilde C.,"Chant, Piano",Mercredi,Rosemère,14:00,21:00,16:00,18:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Morgane G. ,Chant,Mercredi,Lorraine,18:00,20:00,,,,,,,Oui,,,,,,,,,,,,,,,,
-Justine L. ,Chant,Mardi ,Rosemère,15:00,21:00,16:30,18:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Linda G.,"Piano, Chant",Mardi ,Lorraine,10:00,20:00,13:00,15:30,30,16:30,18:30,30,Oui,,,,,,,,,,,,,,,,
-Morgane G. ,Chant,Mardi ,Lorraine,17:30,21:30,17:30,20:00,15,,,,Oui,,,,,,,,,,,,,,,,
-Shawn-Michael B. ,"Guitare, Ukulélé, Saxophone",Mardi ,Rosemère,17:30,21:00,,,,,,,Oui,,,,,,,,,,,,,,,,
-Vincent C. ,Guitare,Mardi ,Lorraine,15:00,22:00,,,,,,,Non,,,,,,,,,,,,,,,,
-Tanya T. ,Piano,Mardi ,Rosemère,16:00,21:00,17:30,19:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Jacob L. ,"Violon, Piano",Mardi ,Rosemère,13:00,21:00,16:00,19:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Antoine B.,Piano,Lundi ,Lorraine,16:00,20:30,,,,,,,Non,,,,,,,,,,,,,,,,
-Justine L. ,Chant,Lundi ,Rosemère,12:00,21:00,16:30,18:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Thomas B.,Guitare,Lundi ,Lorraine,15:00,21:00,,,,,,,Oui,,,,,,,,,,,,,,,,
-Shin-jung L.,"Violon, Piano",Lundi ,Lorraine,13:00,21:00,15:30,16:30,30,17:30,19:00,30,Oui,,,,,,,,,,,,,,,,
-Andréane B. ,Piano,Lundi ,Lorraine,15:15,21:00,,,,,,,Non,,,,,,,,,,,,,,,,
-Claudia T.,Chant,Jeudi,Rosemère,17:00,21:00,18:30,19:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Mathilde C.,"Chant, Piano",Jeudi,Rosemère,14:00,21:00,16:30,18:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Jacob L. ,"Violon, Piano",Jeudi,Lorraine,16:30,21:00,18:00,19:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Vinie M.,"Chant, Piano",Jeudi,Lorraine,13:00,20:00,16:00,18:00,30,,,,Oui,,,,,,,,,,,,,,,,
-Shin-jung L.,"Violon, Piano",Jeudi,Lorraine,15:00,21:00,16:00,17:30,30,19:00,20:30,30,Oui,,,,,,,,,,,,,,,,
-Linda G.,"Piano, Chant",Jeudi,Rosemère,10:00,20:00,11:30,13:30,30,16:30,18:30,30,Oui,,,,,,,,,,,,,,,,
-Jacob L. ,"Violon, Piano",Dimanche,Lorraine,08:00,16:00,11:30,13:30,30,,,,Oui,,,,,,,,,,,,,,,,
-Tanya T. ,Piano,Dimanche,Lorraine,08:00,16:00,11:30,13:30,30,,,,Oui,,,,,,,,,,,,,,,,
+teacher_name,instrument,day,location,start_time,end_time,start_break_1,end_break_1,length_break_1,start_break_2,end_break_2,length_break_2,accept_new_student
+Shin-jung L.,"Violon, Piano",Jeudi,Lorraine,15:00,21:15,16:00,17:30,30,19:00,20:30,15,Oui
+Shin-jung L.,"Violon, Piano",Vendredi,Lorraine,13:00,21:00,15:00,16:00,30,18:00,19:30,30,Oui
+Linda G.,"Piano, Chant",Jeudi,Rosemère,10:00,20:00,11:30,13:30,30,16:30,18:30,30,Oui
+Linda G.,"Piano, Chant",Mardi ,Lorraine,10:00,20:00,13:00,15:30,30,16:30,18:30,30,Oui
+Tanya T. ,Piano,Dimanche,Lorraine,8:00,16:00,11:30,13:30,30,,,,Oui
+Tanya T. ,Piano,Mardi ,Rosemère,16:00,21:00,17:30,19:00,30,,,,Oui
+Tanya T. ,Piano,Mercredi,Rosemère,15:00,21:15,17:00,19:00,30,,,,Oui
+Tanya T. ,Piano,Samedi ,Rosemère,8:00,13:00,,,,,,,Oui
+Shawn-Michael B. ,"Guitare, Ukulélé, Saxophone",Mardi ,Rosemère,17:30,21:30,,,,,,,Oui
+Shawn-Michael B. ,"Guitare, Ukulélé, Saxophone",Vendredi,Rosemère,16:30,21:30,,,,,,,Oui
+Thomas B.,Guitare,Lundi ,Lorraine,15:00,21:00,,,,,,,Oui
+Vincent C. ,Guitare,Mardi ,Lorraine,15:00,22:00,,,,,,,Non
+Mathilde C.,"Chant, Piano",Jeudi,Rosemère,14:00,21:00,16:30,18:30,30,,,,Oui
+Vinie M.,"Chant, Piano",Jeudi,Lorraine,13:00,20:00,16:00,18:00,30,,,,Oui
+Mathilde C.,"Chant, Piano",Mercredi,Rosemère,14:00,21:00,16:00,18:30,30,,,,Oui
+Mathilde C.,"Chant, Piano",Samedi ,Lorraine,9:00,17:00,12:00,13:30,30,,,,Oui
+Vinie M.,"Chant, Piano",Samedi ,Lorraine,9:00,14:00,11:30,13:00,30,,,,Oui
+Vinie M.,"Chant, Piano",Vendredi,Rosemère,12:00,20:00,15:00,18:30,30,,,,Oui
+Claudia T.,Chant,Jeudi,Rosemère,17:00,21:15,18:30,19:30,30,,,,Oui
+Morgane G. ,Chant,Mardi ,Lorraine,17:30,21:30,17:30,20:00,15,,,,Oui
+Morgane G. ,Chant,Mercredi,Lorraine,18:00,20:00,,,,,,,Oui
