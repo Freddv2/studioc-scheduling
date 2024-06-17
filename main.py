@@ -453,7 +453,7 @@ def run(students, teachers):
     assign_students(students, teachers)
     schedule = {teacher: {(day, time.strftime("%H:%M")): student for (day, time), student in timeslots.items()} for
                 teacher, timeslots in best_schedule.items()}
-    print_schedules(schedule)
+    print_schedules(teachers, schedule)
     print_stats(best_processed_students, best_schedule)
     output_to_csv(best_processed_students)
 

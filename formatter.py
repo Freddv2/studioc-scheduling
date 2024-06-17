@@ -3,34 +3,30 @@ import re
 from datetime import timedelta, datetime
 
 
-def print_schedules(schedules):
+def print_schedules(teachers, schedules):
     with open('schedules_visual.txt', 'w', encoding='utf-8') as file:
         print("\033[92m# Assigné au lieu et au professeur demandé\033[0m")
         print("\033[96m# Assigné au professeur mais pas au lieu\033[0m")
         print("\033[93m# Assigné au lieu mais pas au professeur\033[0m")
         print("\033[91m# Assigné ni au professeur ni au lieu demandé\033[0m")
         for teacher, schedule in schedules.items():
-            teacher_schedule_title = f"\nHoraire de {teacher}:"
+            teacher_instrument = get_teacher_instrument(teachers,teacher)
+            teacher_schedule_title = f"\nHoraire de {teacher} ({teacher_instrument})"
             print(teacher_schedule_title)
-            schedule_output = print_teacher_schedule(schedule)
+            schedule_output = print_teacher_schedule(teacher, teachers, schedule)
             print(schedule_output)  # Print to console
             file.write("\n" + teacher_schedule_title + "\n")
             file.write(re.sub(r'\033\[\d+m', '', schedule_output))  # Write to file without color codes
 
 
-def print_teacher_schedule(schedule):
+def print_teacher_schedule(teacher, teachers, schedule):
     availability_schedule = {}
-    daily_instruments = {}
-    daily_locations = {}
 
     for (day, time), entry in schedule.items():
         # Update availability_schedule
         if entry is not None:
-            availability_schedule[(day, time)] = (entry['Name'], entry['preferred_teacher'], entry['preferred_location'])
-            # Update daily_instruments and daily_locations
-            if day not in daily_instruments or day not in daily_locations:
-                daily_instruments[day] = entry['instrument']
-                daily_locations[day] = entry['location']
+            availability_schedule[(day, time)] = (
+                entry['Name'], entry['preferred_teacher'], entry['preferred_location'])
         else:
             availability_schedule[(day, time)] = ("(Disponible)", None, None)
 
@@ -50,10 +46,10 @@ def print_teacher_schedule(schedule):
     days_of_the_week = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
     teaching_days_header = []
     for day in days_of_the_week:
-        if day in daily_instruments:
-            instrument = daily_instruments[day]
-            location = daily_locations.get(day, "")
-            teaching_days_header.append(f"{day.capitalize()} - {instrument}, {location}")
+        teacher_row = get_teacher_by_day(teachers, teacher, day)
+        if not teacher_row.empty:
+            teaching_days_header.append(
+                f"{day.capitalize()} - {teacher_row['location'].iloc[0]}")
 
     # Handle the case where the teacher is not teaching
     if not teaching_days_header:
@@ -63,7 +59,8 @@ def print_teacher_schedule(schedule):
 
     # Determine the column width based on the longest student name across the entire schedule
     column_width = max(len(str(value[0])) for value in availability_schedule.values())
-    column_width = max(column_width, max(len(day) for day in teaching_days_header))  # Make sure the width is not smaller than day names
+    column_width = max(column_width, max(
+        len(day) for day in teaching_days_header))  # Make sure the width is not smaller than day names
 
     output = []
     # Print header
@@ -76,7 +73,8 @@ def print_teacher_schedule(schedule):
         row = []
         for day_header in teaching_days_header:
             day = day_header.split(' - ')[0].lower()
-            cell, preferred_teacher, preferred_location = availability_schedule.get((day.lower(), time), (" " * column_width, None, None))
+            cell, preferred_teacher, preferred_location = availability_schedule.get((day.lower(), time),
+                                                                                    (" " * column_width, None, None))
             cell = cell.center(column_width)
             color_code = determine_cell_color(preferred_teacher, preferred_location)
             formatted_cell = f"{color_code}{cell}\033[0m"
@@ -84,6 +82,15 @@ def print_teacher_schedule(schedule):
         output.append(f"{time} | " + " | ".join(row))
 
     return "\n".join(output)
+
+
+def get_teacher_by_day(teachers_schedule, teacher_name, day):
+    return teachers_schedule[(teachers_schedule['teacher_name'] == teacher_name) & (teachers_schedule['day'] == day)]
+
+
+def get_teacher_instrument(teachers_schedule, teacher_name):
+    teacher_rows = teachers_schedule[(teachers_schedule['teacher_name'] == teacher_name)]
+    return teacher_rows['instrument'].iloc[0]
 
 
 def determine_cell_color(preferred_teacher, preferred_location):
@@ -115,12 +122,17 @@ def print_stats(processed_students, teacher_schedules):
     nb_of_assigned_students = sum(1 for student in processed_students if student['Assigné'] is True)
     percent_of_assigned_students = round((nb_of_assigned_students / len(processed_students)) * 100, 1)
 
-    nb_of_students_assigned_to_preferred_teacher = sum(1 for student in processed_students if student["Assigné à l'enseignant demandé"] is True)
-    nb_of_students_asked_for_preferred_teacher = sum(1 for student in processed_students if student['Enseignant demandé'])
-    percent_of_assigned_students_with_preferred_teacher = round((nb_of_students_assigned_to_preferred_teacher / nb_of_students_asked_for_preferred_teacher) * 100, 1)
+    nb_of_students_assigned_to_preferred_teacher = sum(
+        1 for student in processed_students if student["Assigné à l'enseignant demandé"] is True)
+    nb_of_students_asked_for_preferred_teacher = sum(
+        1 for student in processed_students if student['Enseignant demandé'])
+    percent_of_assigned_students_with_preferred_teacher = round(
+        (nb_of_students_assigned_to_preferred_teacher / nb_of_students_asked_for_preferred_teacher) * 100, 1)
 
-    nb_of_assigned_students_with_ideal_timeslot = sum(1 for student in processed_students if student['Plage horaire idéale'] is True)
-    percent_of_assigned_students_with_ideal_timeslot = round((nb_of_assigned_students_with_ideal_timeslot / len(processed_students)) * 100, 1)
+    nb_of_assigned_students_with_ideal_timeslot = sum(
+        1 for student in processed_students if student['Plage horaire idéale'] is True)
+    percent_of_assigned_students_with_ideal_timeslot = round(
+        (nb_of_assigned_students_with_ideal_timeslot / len(processed_students)) * 100, 1)
 
     teachers_assignment_percentage = calculate_teachers_assignment_percentage(teacher_schedules)
 
