@@ -10,7 +10,7 @@ def print_schedules(teachers, schedules):
         print("\033[93m# Assigné au lieu mais pas au professeur\033[0m")
         print("\033[91m# Assigné ni au professeur ni au lieu demandé\033[0m")
         for teacher, schedule in schedules.items():
-            teacher_instrument = get_teacher_instrument(teachers,teacher)
+            teacher_instrument = get_teacher_instrument(teachers, teacher)
             teacher_schedule_title = f"\nHoraire de {teacher} ({teacher_instrument})"
             print(teacher_schedule_title)
             schedule_output = print_teacher_schedule(teacher, teachers, schedule)
@@ -122,24 +122,7 @@ def print_stats(processed_students, teacher_schedules):
     nb_of_assigned_students = sum(1 for student in processed_students if student['Assigné'] is True)
     percent_of_assigned_students = round((nb_of_assigned_students / len(processed_students)) * 100, 1)
 
-    nb_of_students_assigned_to_preferred_teacher = sum(
-        1 for student in processed_students if student["Assigné à l'enseignant demandé"] is True)
-    nb_of_students_asked_for_preferred_teacher = sum(
-        1 for student in processed_students if student['Enseignant demandé'])
-    percent_of_assigned_students_with_preferred_teacher = round(
-        (nb_of_students_assigned_to_preferred_teacher / nb_of_students_asked_for_preferred_teacher) * 100, 1)
-
-    nb_of_assigned_students_with_ideal_timeslot = sum(
-        1 for student in processed_students if student['Plage horaire idéale'] is True)
-    percent_of_assigned_students_with_ideal_timeslot = round(
-        (nb_of_assigned_students_with_ideal_timeslot / len(processed_students)) * 100, 1)
-
-    teachers_assignment_percentage = calculate_teachers_assignment_percentage(teacher_schedules)
-
-    print(f'\nPreferred Teacher matched at {percent_of_assigned_students_with_preferred_teacher}%.')
-    print(f'Preferred Time Slot matched at {percent_of_assigned_students_with_ideal_timeslot}%.')
-    print(f'Student matched at {percent_of_assigned_students}%.')
-    print(f'Teachers matched at {teachers_assignment_percentage}%.')
+    print(f'\nStudent matched at {percent_of_assigned_students}%.')
 
 
 def calculate_teachers_assignment_percentage(teachers_schedule):

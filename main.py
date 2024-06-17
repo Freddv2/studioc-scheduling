@@ -367,7 +367,7 @@ def assign_to_available_slot(teacher_schedule, student_schedule, lesson_duration
                              processed_students):
     for day, timeslots in student_schedule.items():
         if day != teacher['day']:
-            return False
+            continue
         for timeslot in timeslots:
             lesson_periods = [time_plus(timeslot, timedelta(minutes=15 * i)) for i in
                               range(lesson_duration_in_quarter_hours)]
